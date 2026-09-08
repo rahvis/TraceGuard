@@ -1,0 +1,78 @@
+#cloud-config
+# TraceGuard confidential-VM bootstrap. Installs Docker + tpm2-tools, fetches the
+# source, builds the image, and runs the container with the guest vTPM mounted so
+# the in-guest attestation module can produce a real, MAA-verified SEV-SNP quote.
+#
+# Placeholders (@@NAME@@) are substituted by deploy.sh before base64-encoding.
+package_update: true
+package_upgrade: false
+
+packages:
+  - ca-certificates
+  - curl
+  - git
+  - tpm2-tools
+  - jq
+
+write_files:
+  - path: /opt/traceguard/run.sh
+    permissions: '0755'
+    owner: root:root
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+      LOG=/var/log/traceguard-bootstrap.log
+      exec > >(tee -a "$LOG") 2>&1
+      echo "[traceguard] bootstrap started $(date -u)"
+
+      # --- Docker engine -------------------------------------------------------
+      if ! command -v docker >/dev/null 2>&1; then
+        install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+          -o /etc/apt/keyrings/docker.asc
+        chmod a+r /etc/apt/keyrings/docker.asc
+        . /etc/os-release
+        ARCH="$(dpkg --print-architecture)"
+        KEY="/etc/apt/keyrings/docker.asc"
+        REPO="https://download.docker.com/linux/ubuntu"
+        printf 'deb [arch=%s signed-by=%s] %s %s stable\n' "$ARCH" "$KEY" "$REPO" "$VERSION_CODENAME" > /etc/apt/sources.list.d/docker.list
+        apt-get update
+        apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+      fi
+      systemctl enable --now docker
+
+      # --- Source --------------------------------------------------------------
+      SRC=/opt/traceguard/src
+      REPO_URL="@@REPO_URL@@"
+      REPO_BRANCH="@@REPO_BRANCH@@"
+      if [ ! -d "$SRC/.git" ]; then
+        git clone --branch "$REPO_BRANCH" --depth 1 "$REPO_URL" "$SRC"
+      fi
+      cd "$SRC"
+
+      # --- Build the image (bakes the React console + tpm2-tools) --------------
+      docker build -t traceguard-research:cvm .
+
+      # --- Run with the guest vTPM + measured-boot log mounted -----------------
+      # /dev/tpmrm0 is the Azure CVM vTPM resource manager; /sys/kernel/security
+      # exposes the TCG event log. --group-add tss grants the container access
+      # without full privilege.
+      TSS_GID="$(getent group tss | cut -d: -f3 || true)"
+      docker rm -f traceguard >/dev/null 2>&1 || true
+      docker run -d --name traceguard --restart unless-stopped \
+        -p 80:8080 \
+        --device /dev/tpmrm0 \
+        -v /sys/kernel/security:/sys/kernel/security:ro \
+        ${TSS_GID:+--group-add ${TSS_GID}} \
+        -e TRACEGUARD_ISOLATION="Azure-ConfidentialVM-SEV-SNP" \
+        -e TRACEGUARD_ATTESTATION_MODE="auto" \
+        -e TRACEGUARD_MAA_ENDPOINT="@@MAA_ENDPOINT@@" \
+        -e TRACEGUARD_SIGNING_KEY_FILE="/data/runtime/signing-key.pem" \
+        -v traceguard-data:/data \
+        traceguard-research:cvm
+
+      echo "[traceguard] container started; app on :80"
+      echo "[traceguard] bootstrap finished $(date -u)"
+
+runcmd:
+  - [ bash, /opt/traceguard/run.sh ]

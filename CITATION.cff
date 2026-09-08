@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this artifact, please cite the paper it accompanies."
+title: "TraceShield: Trace-Reconstruction Attacks and Trace-Private Defenses for Confidential LLM Agents"
+abstract: >-
+  Research artifact for a study of the host-observable execution trace of an
+  autonomous language-model agent running over a private corpus inside an
+  attested AMD SEV-SNP confidential virtual machine. Contains the six-agent
+  prior-authorization crew, the Trace-Reconstruction Attack and its statistical
+  controls, the TraceShield defense, the Ed25519 trace receipts and hash-chained
+  ledger with an independent verifier, the confidential-VM deployment, the
+  experiment journals every reported number is computed from, and the analysis
+  scripts that recompute those numbers.
+type: software
+license: Apache-2.0
+version: 0.1.0
+authors:
+  - name: "Artifact authors to be supplied on publication"
+keywords:
+  - confidential computing
+  - differential privacy
+  - LLM agents
+  - side channels
+  - reproducibility
+references:
+  - type: conference-paper
+    title: "Trace-Reconstruction Attacks and Trace-Private Defenses for Confidential LLM Agents"
+    authors:
+      - name: "Authors to be supplied on publication"
+    notes: >-
+      Under review. This artifact is anchored to a specific manuscript state by
+      the digests recorded in src/traceguard/data/paper-reported-unverified.json.

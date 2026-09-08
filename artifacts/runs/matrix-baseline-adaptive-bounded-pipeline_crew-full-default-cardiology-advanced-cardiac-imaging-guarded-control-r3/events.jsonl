@@ -1,0 +1,2 @@
+{"event_type":"run_started","run_id":"matrix-baseline-adaptive-bounded-pipeline_crew-full-default-cardiology-advanced-cardiac-imaging-guarded-control-r3","sequence":0,"status":"running","timestamp":"2026-09-02T12:42:58.315Z"}
+{"event_type":"step_started","run_id":"matrix-baseline-adaptive-bounded-pipeline_crew-full-default-cardiology-advanced-cardiac-imaging-guarded-control-r3","sequence":0,"step_type":"intake","timestamp":"2026-09-02T12:42:58.316Z"}

@@ -1,0 +1,296 @@
+{
+  "seed": 20260710,
+  "permutations": 2000,
+  "prior-authorization": {
+    "display_name": "prior authorization",
+    "ladder_polarity": "documentation absent",
+    "n": 192,
+    "arm": {
+      "attribute": {
+        "auc": 0.7630208333333334,
+        "n": 192,
+        "null_mean": 0.5978463541666668,
+        "null_q95": 0.6536892361111111,
+        "p_value": 0.0004997501249375312,
+        "null_report": {
+          "n_perm": 2000,
+          "p_value": 0.0004997501249375312
+        }
+      },
+      "membership": {
+        "auc": 0.7194010416666666,
+        "n": 192,
+        "null_mean": 0.5840104166666668,
+        "null_q95": 0.6315429687499999,
+        "p_value": 0.0004997501249375312,
+        "null_report": {
+          "n_perm": 2000,
+          "p_value": 0.0004997501249375312
+        }
+      }
+    },
+    "depth": {
+      "median": 7,
+      "min": 5,
+      "max": 7,
+      "at_cap_pct": 94.27083333333333
+    },
+    "ordinal": {
+      "protocol": "leave-one-(service,topic)-out",
+      "attacker": "binary-trained, ordinally scored",
+      "selected_attacker": "A1",
+      "n": 192,
+      "n_dropped_to_fold_attrition": 0,
+      "rungs": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "rung_sizes": [
+        48,
+        48,
+        48,
+        48
+      ],
+      "rung_mean_score": [
+        0.456219,
+        0.628433,
+        0.652352,
+        0.675041
+      ],
+      "somers_d": 0.21903935185185186,
+      "somers_d_signed": 0.21903935185185186,
+      "direction": "increasing",
+      "trend": {
+        "statistic": 8426.0,
+        "expected": 6912.0,
+        "variance": 183168.0,
+        "z": 3.5375376720639795,
+        "n_groups": 4,
+        "group_sizes": [
+          48,
+          48,
+          48,
+          48
+        ],
+        "note": "Quote the permutation p-value, not the normal approximation: the approximation assumes no ties and large groups."
+      },
+      "binary_auc": 0.7630208333333334,
+      "binary_pooled_auc": 0.6885127314814815,
+      "n_groups_skipped": 0,
+      "null": {
+        "null_mean": 0.039745,
+        "null_q95": 0.095927,
+        "p_value": 0.0005,
+        "n_perm": 2000,
+        "scheme": "rung labels permuted within held-out group, attacker held fixed"
+      },
+      "within_sensitive": {
+        "question": "given a sensitive case, does the trace reveal which rung?",
+        "n": 144,
+        "rungs": [
+          1,
+          2,
+          3
+        ],
+        "rung_sizes": [
+          48,
+          48,
+          48
+        ],
+        "rung_mean_score": [
+          0.628433,
+          0.652352,
+          0.675041
+        ],
+        "somers_d": 0.06105324074074074,
+        "somers_d_signed": 0.06105324074074074,
+        "trend": {
+          "statistic": 3667.0,
+          "expected": 3456.0,
+          "variance": 73152.0,
+          "z": 0.7801342645283335,
+          "n_groups": 3,
+          "group_sizes": [
+            48,
+            48,
+            48
+          ],
+          "note": "Quote the permutation p-value, not the normal approximation: the approximation assumes no ties and large groups."
+        },
+        "direction": "increasing",
+        "null": {
+          "null_mean": 0.047664,
+          "null_q95": 0.119502,
+          "p_value": 0.29985,
+          "n_perm": 2000,
+          "scheme": "rung labels permuted within held-out group, attacker held fixed"
+        }
+      }
+    }
+  },
+  "aml-alert-triage": {
+    "display_name": "AML alert triage",
+    "ladder_polarity": "evidence present",
+    "n": 96,
+    "arm": {
+      "attribute": {
+        "auc": 0.7673611111111112,
+        "n": 96,
+        "null_mean": 0.6439184027777777,
+        "null_q95": 0.71875,
+        "p_value": 0.006496751624187906,
+        "null_report": {
+          "n_perm": 2000,
+          "p_value": 0.006496751624187906
+        }
+      },
+      "membership": {
+        "auc": 0.6119791666666666,
+        "n": 96,
+        "null_mean": 0.6220325520833334,
+        "null_q95": 0.6901041666666666,
+        "p_value": 0.5887056471764118,
+        "null_report": {
+          "n_perm": 2000,
+          "p_value": 0.5887056471764118
+        }
+      }
+    },
+    "depth": {
+      "median": 7,
+      "min": 4,
+      "max": 7,
+      "at_cap_pct": 97.91666666666667
+    },
+    "ordinal": {
+      "protocol": "leave-one-(service,topic)-out",
+      "attacker": "binary-trained, ordinally scored",
+      "selected_attacker": "A1",
+      "n": 96,
+      "n_dropped_to_fold_attrition": 0,
+      "rungs": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "rung_sizes": [
+        24,
+        24,
+        24,
+        24
+      ],
+      "rung_mean_score": [
+        0.442722,
+        0.616325,
+        0.553208,
+        0.626565
+      ],
+      "somers_d": 0.18113425925925927,
+      "somers_d_signed": 0.18113425925925927,
+      "direction": "increasing",
+      "trend": {
+        "statistic": 2041.0,
+        "expected": 1728.0,
+        "variance": 22752.0,
+        "z": 2.0750785828916958,
+        "n_groups": 4,
+        "group_sizes": [
+          24,
+          24,
+          24,
+          24
+        ],
+        "note": "Quote the permutation p-value, not the normal approximation: the approximation assumes no ties and large groups."
+      },
+      "binary_auc": 0.7673611111111112,
+      "binary_pooled_auc": 0.6678240740740741,
+      "n_groups_skipped": 0,
+      "null": {
+        "null_mean": 0.067182,
+        "null_q95": 0.163802,
+        "p_value": 0.028486,
+        "n_perm": 2000,
+        "scheme": "rung labels permuted within held-out group, attacker held fixed"
+      },
+      "within_sensitive": {
+        "question": "given a sensitive case, does the trace reveal which rung?",
+        "n": 72,
+        "rungs": [
+          1,
+          2,
+          3
+        ],
+        "rung_sizes": [
+          24,
+          24,
+          24
+        ],
+        "rung_mean_score": [
+          0.616325,
+          0.553208,
+          0.626565
+        ],
+        "somers_d": 0.02662037037037037,
+        "somers_d_signed": 0.02662037037037037,
+        "trend": {
+          "statistic": 887.0,
+          "expected": 864.0,
+          "variance": 9072.0,
+          "z": 0.2414773022003396,
+          "n_groups": 3,
+          "group_sizes": [
+            24,
+            24,
+            24
+          ],
+          "note": "Quote the permutation p-value, not the normal approximation: the approximation assumes no ties and large groups."
+        },
+        "direction": "increasing",
+        "null": {
+          "null_mean": 0.088941,
+          "null_q95": 0.21875,
+          "p_value": 0.810095,
+          "n_perm": 2000,
+          "scheme": "rung labels permuted within held-out group, attacker held fixed"
+        }
+      }
+    }
+  },
+  "holm": {
+    "alpha": 0.05,
+    "family_size": 4,
+    "results": {
+      "family:prior-authorization:attribute": {
+        "p_value": 0.0004997501249375312,
+        "threshold": 0.0125,
+        "p_adjusted": 0.001999000499750125,
+        "rejected": true
+      },
+      "family:prior-authorization:membership": {
+        "p_value": 0.0004997501249375312,
+        "threshold": 0.016666666666666666,
+        "p_adjusted": 0.001999000499750125,
+        "rejected": true
+      },
+      "family:aml-alert-triage:attribute": {
+        "p_value": 0.006496751624187906,
+        "threshold": 0.025,
+        "p_adjusted": 0.012993503248375811,
+        "rejected": true
+      },
+      "family:aml-alert-triage:membership": {
+        "p_value": 0.5887056471764118,
+        "threshold": 0.05,
+        "p_adjusted": 0.5887056471764118,
+        "rejected": false
+      }
+    }
+  },
+  "families_clearing_own_null": [
+    "prior-authorization",
+    "aml-alert-triage"
+  ]
+}

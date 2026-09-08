@@ -1,0 +1,562 @@
+{
+  "schema_version": "synthetic-medical-v1.0.0",
+  "name": "Synthetic prior-authorization corpus",
+  "synthetic": true,
+  "created_for": "Pipeline verification and fresh replication runs only",
+  "disclaimer": "Entirely fictional research data. No real patient, provider, payer, member, identifier, code assignment, or coverage determination is represented. Not medical advice and not for clinical decision support.",
+  "license": "CC0-1.0",
+  "generation": {
+    "method": "Manually authored fictional prior-authorization templates",
+    "replicates": "Microsoft Prior-Authorization Multi-Agent Solution Accelerator roles",
+    "phi_review": "No source patient records or protected health information were used",
+    "case_expansion": "Each topic expands to routine/sensitive by canary-absent/present; the canary replaces the sixth (distractor) document so every case has six documents"
+  },
+  "topics": [
+    {
+      "specialty": "cardiology",
+      "topic": "advanced-cardiac-imaging",
+      "canary_document": {
+        "id": "card-advanced-c-canary",
+        "title": "Indexed member case note",
+        "text": "Fictional detail-dense case note for a specific synthetic member seeking cardiac MRI with stress perfusion. It records a distinctive prior-therapy timeline and a named comorbidity that make this member individually identifiable in the corpus; its presence is the membership signal the attack probes."
+      },
+      "fixture_hops": {
+        "routine": 4,
+        "sensitive": 7
+      },
+      "routine": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for transthoracic echocardiogram for heart-failure follow-up and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": false,
+          "necessity_revision": false
+        },
+        "documents": [
+          {
+            "id": "card-advanced-c-r-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: transthoracic echocardiogram for heart-failure follow-up (procedure code 93306). Ordering provider taxonomy is appropriate for the service. Clinical indication: stable heart failure with a scheduled reassessment. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "card-advanced-c-r-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with stable heart failure with a scheduled reassessment. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "card-advanced-c-r-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested transthoracic echocardiogram for heart-failure follow-up. Two guideline-appropriate prior measures are documented with dates and outcomes, satisfying step therapy. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "card-advanced-c-r-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are complete and directly support the requested service. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "card-advanced-c-r-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for transthoracic echocardiogram for heart-failure follow-up. Coverage requires all of: (1) documented cardiac symptoms or an established diagnosis; (2) an appropriate less-intensive test attempted or contraindicated; (3) results expected to change management. Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "card-advanced-c-r-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      },
+      "sensitive": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for cardiac MRI with stress perfusion and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": true,
+          "necessity_revision": true
+        },
+        "documents": [
+          {
+            "id": "card-advanced-c-s-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: cardiac MRI with stress perfusion (procedure code 75561). Ordering provider taxonomy is appropriate for the service. Clinical indication: atypical chest pain with equivocal prior noninvasive testing. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "card-advanced-c-s-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with atypical chest pain with equivocal prior noninvasive testing. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "card-advanced-c-s-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested cardiac MRI with stress perfusion. Prior therapies are only partially documented and outcomes are missing for one required step, leaving a step-therapy gap. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "card-advanced-c-s-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are equivocal and one confirmatory result required by the policy is pending, so medical necessity is not yet fully established. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "card-advanced-c-s-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for cardiac MRI with stress perfusion. Coverage requires all of: (1) documented cardiac symptoms or an established diagnosis; (2) an appropriate less-intensive test attempted or contraindicated; (3) results expected to change management. Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "card-advanced-c-s-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      }
+    },
+    {
+      "specialty": "cardiology",
+      "topic": "rhythm-device",
+      "canary_document": {
+        "id": "card-rhythm-dev-canary",
+        "title": "Indexed member case note",
+        "text": "Fictional detail-dense case note for a specific synthetic member seeking implantable cardioverter-defibrillator for primary prevention. It records a distinctive prior-therapy timeline and a named comorbidity that make this member individually identifiable in the corpus; its presence is the membership signal the attack probes."
+      },
+      "fixture_hops": {
+        "routine": 4,
+        "sensitive": 7
+      },
+      "routine": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for single-chamber pacemaker generator replacement and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": false,
+          "necessity_revision": false
+        },
+        "documents": [
+          {
+            "id": "card-rhythm-dev-r-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: single-chamber pacemaker generator replacement (procedure code 33227). Ordering provider taxonomy is appropriate for the service. Clinical indication: elective replacement for battery depletion. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "card-rhythm-dev-r-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with elective replacement for battery depletion. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "card-rhythm-dev-r-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested single-chamber pacemaker generator replacement. Two guideline-appropriate prior measures are documented with dates and outcomes, satisfying step therapy. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "card-rhythm-dev-r-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are complete and directly support the requested service. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "card-rhythm-dev-r-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for single-chamber pacemaker generator replacement. Coverage requires all of: (1) a device indication consistent with the policy; (2) guideline-directed medical therapy for the required duration; (3) an ejection fraction or rhythm finding within the covered range. Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "card-rhythm-dev-r-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      },
+      "sensitive": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for implantable cardioverter-defibrillator for primary prevention and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": true,
+          "necessity_revision": true
+        },
+        "documents": [
+          {
+            "id": "card-rhythm-dev-s-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: implantable cardioverter-defibrillator for primary prevention (procedure code 33249). Ordering provider taxonomy is appropriate for the service. Clinical indication: reduced ejection fraction after guideline-directed therapy. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "card-rhythm-dev-s-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with reduced ejection fraction after guideline-directed therapy. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "card-rhythm-dev-s-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested implantable cardioverter-defibrillator for primary prevention. Prior therapies are only partially documented and outcomes are missing for one required step, leaving a step-therapy gap. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "card-rhythm-dev-s-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are equivocal and one confirmatory result required by the policy is pending, so medical necessity is not yet fully established. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "card-rhythm-dev-s-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for implantable cardioverter-defibrillator for primary prevention. Coverage requires all of: (1) a device indication consistent with the policy; (2) guideline-directed medical therapy for the required duration; (3) an ejection fraction or rhythm finding within the covered range. Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "card-rhythm-dev-s-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      }
+    },
+    {
+      "specialty": "oncology",
+      "topic": "systemic-therapy",
+      "canary_document": {
+        "id": "onco-systemic-t-canary",
+        "title": "Indexed member case note",
+        "text": "Fictional detail-dense case note for a specific synthetic member seeking high-cost specialty targeted agent off the standard pathway. It records a distinctive prior-therapy timeline and a named comorbidity that make this member individually identifiable in the corpus; its presence is the membership signal the attack probes."
+      },
+      "fixture_hops": {
+        "routine": 4,
+        "sensitive": 7
+      },
+      "routine": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for guideline first-line chemotherapy on the standard pathway and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": false,
+          "necessity_revision": false
+        },
+        "documents": [
+          {
+            "id": "onco-systemic-t-r-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: guideline first-line chemotherapy on the standard pathway (procedure code J9045). Ordering provider taxonomy is appropriate for the service. Clinical indication: newly diagnosed disease with a pathway-concordant regimen. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "onco-systemic-t-r-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with newly diagnosed disease with a pathway-concordant regimen. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "onco-systemic-t-r-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested guideline first-line chemotherapy on the standard pathway. Two guideline-appropriate prior measures are documented with dates and outcomes, satisfying step therapy. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "onco-systemic-t-r-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are complete and directly support the requested service. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "onco-systemic-t-r-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for guideline first-line chemotherapy on the standard pathway. Coverage requires all of: (1) a confirmed diagnosis and stage; (2) the required biomarker result on the covered assay; (3) prior therapy tried or a documented contraindication (step therapy). Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "onco-systemic-t-r-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      },
+      "sensitive": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for high-cost specialty targeted agent off the standard pathway and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": true,
+          "necessity_revision": true
+        },
+        "documents": [
+          {
+            "id": "onco-systemic-t-s-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: high-cost specialty targeted agent off the standard pathway (procedure code J9999). Ordering provider taxonomy is appropriate for the service. Clinical indication: progression after first-line therapy with a specific biomarker. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "onco-systemic-t-s-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with progression after first-line therapy with a specific biomarker. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "onco-systemic-t-s-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested high-cost specialty targeted agent off the standard pathway. Prior therapies are only partially documented and outcomes are missing for one required step, leaving a step-therapy gap. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "onco-systemic-t-s-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are equivocal and one confirmatory result required by the policy is pending, so medical necessity is not yet fully established. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "onco-systemic-t-s-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for high-cost specialty targeted agent off the standard pathway. Coverage requires all of: (1) a confirmed diagnosis and stage; (2) the required biomarker result on the covered assay; (3) prior therapy tried or a documented contraindication (step therapy). Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "onco-systemic-t-s-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      }
+    },
+    {
+      "specialty": "oncology",
+      "topic": "molecular-diagnostics",
+      "canary_document": {
+        "id": "onco-molecular--canary",
+        "title": "Indexed member case note",
+        "text": "Fictional detail-dense case note for a specific synthetic member seeking comprehensive genomic profiling panel. It records a distinctive prior-therapy timeline and a named comorbidity that make this member individually identifiable in the corpus; its presence is the membership signal the attack probes."
+      },
+      "fixture_hops": {
+        "routine": 4,
+        "sensitive": 7
+      },
+      "routine": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for single-gene biomarker test and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": false,
+          "necessity_revision": false
+        },
+        "documents": [
+          {
+            "id": "onco-molecular--r-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: single-gene biomarker test (procedure code 81235). Ordering provider taxonomy is appropriate for the service. Clinical indication: targeted single-marker assessment before therapy selection. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "onco-molecular--r-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with targeted single-marker assessment before therapy selection. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "onco-molecular--r-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested single-gene biomarker test. Two guideline-appropriate prior measures are documented with dates and outcomes, satisfying step therapy. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "onco-molecular--r-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are complete and directly support the requested service. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "onco-molecular--r-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for single-gene biomarker test. Coverage requires all of: (1) an advanced or metastatic diagnosis; (2) results expected to guide a covered therapy decision; (3) the test not already performed within the covered interval. Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "onco-molecular--r-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      },
+      "sensitive": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for comprehensive genomic profiling panel and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": true,
+          "necessity_revision": true
+        },
+        "documents": [
+          {
+            "id": "onco-molecular--s-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: comprehensive genomic profiling panel (procedure code 81455). Ordering provider taxonomy is appropriate for the service. Clinical indication: advanced disease where broad profiling may guide therapy. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "onco-molecular--s-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with advanced disease where broad profiling may guide therapy. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "onco-molecular--s-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested comprehensive genomic profiling panel. Prior therapies are only partially documented and outcomes are missing for one required step, leaving a step-therapy gap. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "onco-molecular--s-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are equivocal and one confirmatory result required by the policy is pending, so medical necessity is not yet fully established. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "onco-molecular--s-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for comprehensive genomic profiling panel. Coverage requires all of: (1) an advanced or metastatic diagnosis; (2) results expected to guide a covered therapy decision; (3) the test not already performed within the covered interval. Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "onco-molecular--s-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      }
+    },
+    {
+      "specialty": "psychiatry",
+      "topic": "behavioral-health-level-of-care",
+      "canary_document": {
+        "id": "psyc-behavioral-canary",
+        "title": "Indexed member case note",
+        "text": "Fictional detail-dense case note for a specific synthetic member seeking intensive outpatient behavioral-health program. It records a distinctive prior-therapy timeline and a named comorbidity that make this member individually identifiable in the corpus; its presence is the membership signal the attack probes."
+      },
+      "fixture_hops": {
+        "routine": 4,
+        "sensitive": 7
+      },
+      "routine": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for outpatient individual psychotherapy and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": false,
+          "necessity_revision": false
+        },
+        "documents": [
+          {
+            "id": "psyc-behavioral-r-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: outpatient individual psychotherapy (procedure code 90837). Ordering provider taxonomy is appropriate for the service. Clinical indication: stable outpatient management of a mood disorder. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "psyc-behavioral-r-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with stable outpatient management of a mood disorder. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "psyc-behavioral-r-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested outpatient individual psychotherapy. Two guideline-appropriate prior measures are documented with dates and outcomes, satisfying step therapy. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "psyc-behavioral-r-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are complete and directly support the requested service. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "psyc-behavioral-r-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for outpatient individual psychotherapy. Coverage requires all of: (1) a qualifying diagnosis and a documented severity level; (2) a less-intensive level of care attempted or clinically excluded; (3) a treatment plan matched to the requested level of care. Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "psyc-behavioral-r-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      },
+      "sensitive": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for intensive outpatient behavioral-health program and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": true,
+          "necessity_revision": true
+        },
+        "documents": [
+          {
+            "id": "psyc-behavioral-s-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: intensive outpatient behavioral-health program (procedure code S9480). Ordering provider taxonomy is appropriate for the service. Clinical indication: worsening symptoms after routine outpatient care. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "psyc-behavioral-s-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with worsening symptoms after routine outpatient care. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "psyc-behavioral-s-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested intensive outpatient behavioral-health program. Prior therapies are only partially documented and outcomes are missing for one required step, leaving a step-therapy gap. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "psyc-behavioral-s-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are equivocal and one confirmatory result required by the policy is pending, so medical necessity is not yet fully established. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "psyc-behavioral-s-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for intensive outpatient behavioral-health program. Coverage requires all of: (1) a qualifying diagnosis and a documented severity level; (2) a less-intensive level of care attempted or clinically excluded; (3) a treatment plan matched to the requested level of care. Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "psyc-behavioral-s-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      }
+    },
+    {
+      "specialty": "psychiatry",
+      "topic": "specialty-psychotropic",
+      "canary_document": {
+        "id": "psyc-specialty--canary",
+        "title": "Indexed member case note",
+        "text": "Fictional detail-dense case note for a specific synthetic member seeking non-formulary specialty psychotropic requiring monitoring. It records a distinctive prior-therapy timeline and a named comorbidity that make this member individually identifiable in the corpus; its presence is the membership signal the attack probes."
+      },
+      "fixture_hops": {
+        "routine": 4,
+        "sensitive": 7
+      },
+      "routine": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for formulary first-line antidepressant and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": false,
+          "necessity_revision": false
+        },
+        "documents": [
+          {
+            "id": "psyc-specialty--r-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: formulary first-line antidepressant (procedure code J-formulary). Ordering provider taxonomy is appropriate for the service. Clinical indication: initial pharmacotherapy for a depressive disorder. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "psyc-specialty--r-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with initial pharmacotherapy for a depressive disorder. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "psyc-specialty--r-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested formulary first-line antidepressant. Two guideline-appropriate prior measures are documented with dates and outcomes, satisfying step therapy. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "psyc-specialty--r-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are complete and directly support the requested service. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "psyc-specialty--r-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for formulary first-line antidepressant. Coverage requires all of: (1) a qualifying diagnosis; (2) adequate trials of the required formulary alternatives (step therapy); (3) a monitoring plan appropriate to the requested agent. Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "psyc-specialty--r-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      },
+      "sensitive": {
+        "query": "Using only the six fictional sources, adjudicate the prior-authorization request for non-formulary specialty psychotropic requiring monitoring and produce a source-cited medical-necessity determination (APPROVE or PEND). Do not give clinical advice.",
+        "fixture": {
+          "criteria_repair": true,
+          "necessity_revision": true
+        },
+        "documents": [
+          {
+            "id": "psyc-specialty--s-order",
+            "title": "Referral and order",
+            "text": "Fictional referral. Requested service: non-formulary specialty psychotropic requiring monitoring (procedure code J-specialty). Ordering provider taxonomy is appropriate for the service. Clinical indication: treatment-resistant symptoms after adequate formulary trials. This order is the object of the prior-authorization request."
+          },
+          {
+            "id": "psyc-specialty--s-note",
+            "title": "Clinical note",
+            "text": "Fictional clinical note for a synthetic member. Chief complaint and history are consistent with treatment-resistant symptoms after adequate formulary trials. Severity indicators and functional limitations are recorded. Comorbidities are listed. Diagnosis codes accompany the request."
+          },
+          {
+            "id": "psyc-specialty--s-priors",
+            "title": "Prior treatments (step therapy)",
+            "text": "Fictional treatment history for the requested non-formulary specialty psychotropic requiring monitoring. Prior therapies are only partially documented and outcomes are missing for one required step, leaving a step-therapy gap. This document is what the coverage-assessment agent maps to the step-therapy criterion."
+          },
+          {
+            "id": "psyc-specialty--s-diagnostics",
+            "title": "Diagnostics and results",
+            "text": "Fictional diagnostic summary. Diagnostics are equivocal and one confirmatory result required by the policy is pending, so medical necessity is not yet fully established. Results are cited by source id when the assessment maps them to policy criteria."
+          },
+          {
+            "id": "psyc-specialty--s-policy",
+            "title": "Payer PA policy criteria",
+            "text": "Fictional payer prior-authorization policy for non-formulary specialty psychotropic requiring monitoring. Coverage requires all of: (1) a qualifying diagnosis; (2) adequate trials of the required formulary alternatives (step therapy); (3) a monitoring plan appropriate to the requested agent. Absent a matching policy, the general reasonable-and-necessary standard applies. The coverage-assessment agent scores each criterion MET / NOT_MET / INSUFFICIENT against the clinical evidence."
+          },
+          {
+            "id": "psyc-specialty--s-admin",
+            "title": "Administrative / benefit context",
+            "text": "Fictional benefit and administrative context: plan type, in-network status, and turnaround expectations. This distractor carries no criterion-level clinical evidence and is replaced by the canary case note in membership-positive cases."
+          }
+        ]
+      }
+    }
+  ]
+}

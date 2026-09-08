@@ -1,0 +1,19 @@
+TraceGuard Research Artifact
+
+This repository is a clean public research implementation created to accompany
+"Trace-Reconstruction Attacks and Trace-Private Defenses for Confidential LLM
+Agents." It does not include the surrounding workspace's proprietary or
+commercial TraceGuard product code.
+
+The synthetic medical corpus in src/traceguard/data/synthetic-medical-v1.json
+is released under CC0-1.0. It was authored for this artifact and contains no
+real patient data.
+
+Third-party Python packages are installed from their upstream distributions and
+retain their own licenses. They are not vendored in this repository. See
+THIRD_PARTY.md and the dependency lock for the exact set used by a run.
+
+The paper checkout does not identify its authors or copyright owner. Those
+fields must be supplied by the publisher before a public release; this artifact
+does not invent them.
+

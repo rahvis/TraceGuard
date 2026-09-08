@@ -1,0 +1,9 @@
+{
+  "model": {
+    "executed": 8,
+    "failed": 0,
+    "journal": "/Users/rahulvishwakarma/Downloads/agenticRAG/github/talentGaurd/artifacts/matrix-model.jsonl",
+    "planned": 288,
+    "resumed": 280
+  }
+}

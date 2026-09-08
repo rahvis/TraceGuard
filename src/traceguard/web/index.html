@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <meta
+      name="description"
+      content="Research console for reproducing trace-shape experiments on a synthetic prior-authorization multi-agent workflow."
+    >
+    <title>Trace-Privacy Research Artifact</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#experiment">Skip to experiment controls</a>
+
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="wordmark" href="#top" aria-label="Trace-privacy research artifact, home">
+          <span class="wordmark-mark" aria-hidden="true">T∿</span>
+          <span>Trace-shape research</span>
+        </a>
+        <nav aria-label="Page sections">
+          <a href="#evidence">Evidence</a>
+          <a href="#experiment">Live run</a>
+          <a href="#reproduce">Reproduce</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero shell" aria-labelledby="paper-title">
+        <div class="hero-copy">
+          <div class="eyebrow-row">
+            <span class="artifact-badge">Public research artifact</span>
+            <span class="version-label" id="artifact-version">Runtime version pending</span>
+          </div>
+          <p class="kicker">Artifact console · confidential-agent trace privacy</p>
+          <h1 id="paper-title">
+            Trace-Reconstruction Attacks and Trace-Private Defenses for Confidential
+            LLM Agents
+          </h1>
+          <p class="hero-summary">
+            Inspect host-observable execution metadata from a six-agent prior-authorization
+            workflow, compare adaptive and canonicalized execution, and verify the integrity
+            receipt emitted by the local runtime.
+          </p>
+        </div>
+
+        <aside class="safety-notice" aria-labelledby="safety-title">
+          <div class="notice-symbol" aria-hidden="true">R</div>
+          <div>
+            <h2 id="safety-title">Synthetic medical data · research only</h2>
+            <p>
+              This artifact is not a medical device and is not for clinical use, diagnosis,
+              treatment, or patient-care decisions. Do not submit patient data or other
+              private material.
+            </p>
+          </div>
+        </aside>
+
+        <div class="boundary-panel" aria-label="Emulation boundary disclosure">
+          <div class="boundary-heading">
+            <span class="status-dot status-dot-amber" aria-hidden="true"></span>
+            <div>
+              <strong>Confidential substrate is emulated</strong>
+              <span>No hardware or privacy-service deployment is claimed.</span>
+            </div>
+          </div>
+          <ul class="boundary-list">
+            <li><span>TEE</span><strong>Emulated · not deployed</strong></li>
+            <li><span>ORAM / oblivious retrieval</span><strong>Emulated · not deployed</strong></li>
+            <li><span>Output differential privacy</span><strong>Emulated · not deployed</strong></li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="shell">
+        <div id="error-region" class="error-region" role="alert" aria-live="assertive" hidden>
+          <div>
+            <strong>Console error</strong>
+            <p id="error-message"></p>
+          </div>
+          <button id="dismiss-error" class="icon-button" type="button" aria-label="Dismiss error">×</button>
+        </div>
+      </div>
+
+      <noscript>
+        <div class="shell noscript-notice">
+          JavaScript is required to load runtime evidence and execute local experiments.
+        </div>
+      </noscript>
+
+      <section id="evidence" class="section shell" aria-labelledby="evidence-title">
+        <div class="section-heading section-heading-split">
+          <div>
+            <p class="section-index">01 · Evidence boundary</p>
+            <h2 id="evidence-title">Reference results and provenance</h2>
+          </div>
+          <p class="section-intro">
+            Paper values are references, not results from this browser session. Live and
+            fixture values appear only after code executes.
+          </p>
+        </div>
+
+        <div class="provenance-grid" aria-label="Provenance categories">
+          <article class="provenance-card provenance-paper">
+            <code>paper_reported_unverified</code>
+            <p>Transcribed paper references. They are not marked as reproduced by this artifact.</p>
+          </article>
+          <article class="provenance-card provenance-live">
+            <code>current_live_replication</code>
+            <p>Measurements produced by a current runtime execution, with its run identifier.</p>
+          </article>
+          <article class="provenance-card provenance-fixture">
+            <code>deterministic_fixture</code>
+            <p>Seeded offline plumbing check. It is not evidence of LLM or paper performance.</p>
+          </article>
+        </div>
+
+        <div class="subsection-heading">
+          <div>
+            <h3>Paper-reported reference</h3>
+            <p id="paper-results-note">Loading the checked-in paper reference endpoint…</p>
+          </div>
+          <button id="reload-paper-results" class="text-button" type="button">Reload reference</button>
+        </div>
+        <div
+          id="paper-results"
+          class="result-grid loading-grid"
+          data-testid="paper-results"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div class="skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton-card" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <section class="section section-tinted" aria-labelledby="runtime-title">
+        <div class="shell">
+          <div class="section-heading section-heading-split">
+            <div>
+              <p class="section-index">02 · Runtime</p>
+              <h2 id="runtime-title">Health and public configuration</h2>
+            </div>
+            <div id="health-summary" class="health-summary" aria-live="polite">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span>Checking local API…</span>
+            </div>
+          </div>
+
+          <div class="runtime-layout">
+            <article class="panel runtime-card">
+              <div class="panel-title-row">
+                <h3>Service</h3>
+                <button id="refresh-runtime" class="text-button" type="button">Refresh</button>
+              </div>
+              <dl id="health-details" class="key-value-list">
+                <div><dt>Status</dt><dd>Pending</dd></div>
+                <div><dt>Version</dt><dd>—</dd></div>
+                <div><dt>LLM provider</dt><dd>—</dd></div>
+              </dl>
+              <p class="privacy-caption">
+                Provider credentials remain server-side. This page never requests, displays,
+                or stores an API key.
+              </p>
+            </article>
+
+            <article class="panel runtime-card">
+              <h3>Public experiment configuration</h3>
+              <dl id="config-details" class="key-value-list">
+                <div><dt>Models</dt><dd>Loading…</dd></div>
+                <div><dt>Canonical hops</dt><dd>—</dd></div>
+                <div><dt>Step deadline</dt><dd>—</dd></div>
+                <div><dt>Egress ceiling</dt><dd>—</dd></div>
+              </dl>
+              <p class="privacy-caption">
+                Vision input is outside this synthetic replication workflow and no document
+                payload is exposed in the console.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="experiment" class="section shell" aria-labelledby="experiment-title">
+        <div class="section-heading section-heading-split">
+          <div>
+            <p class="section-index">03 · Live experiment</p>
+            <h2 id="experiment-title">Run the six-agent prior-authorization workflow</h2>
+          </div>
+          <p class="section-intro">
+            The console renders only agent step, hop, duration, and egress byte count. Prompts,
+            records, retrieved text, model output, and credentials are excluded.
+          </p>
+        </div>
+
+        <div class="experiment-layout">
+          <aside class="panel controls-panel" aria-labelledby="controls-title">
+            <div class="panel-title-row">
+              <div>
+                <h3 id="controls-title">Run controls</h3>
+                <p>One synthetic case per run</p>
+              </div>
+              <span id="dataset-badge" class="dataset-badge">Dataset pending</span>
+            </div>
+
+            <form id="run-form">
+              <div class="field">
+                <label for="case-select">Synthetic case</label>
+                <select id="case-select" name="case_id" data-testid="case-select" required disabled>
+                  <option value="">Loading cases…</option>
+                </select>
+                <small id="case-help">Only synthetic case identifiers and public labels are shown.</small>
+              </div>
+
+              <div class="field">
+                <label for="provider-select">Execution provider</label>
+                <select id="provider-select" name="provider" data-testid="provider-select">
+                  <option value="fixture">Fixture · deterministic and offline</option>
+                  <option value="azure">Azure OpenAI · server-side credentials</option>
+                </select>
+                <small id="provider-help">Fixture runs validate the artifact path, not paper performance.</small>
+              </div>
+
+              <div class="field">
+                <label for="condition-select">Trace condition</label>
+                <select id="condition-select" name="condition" data-testid="condition-select">
+                  <option value="adaptive">Adaptive · undefended trace shape</option>
+                  <option value="structure_only">Structure only · canonical control flow</option>
+                  <option value="full_pad">Full pad · structure, timing, and size</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="seed-input">Random seed</label>
+                <input
+                  id="seed-input"
+                  name="seed"
+                  type="number"
+                  inputmode="numeric"
+                  min="0"
+                  max="2147483647"
+                  step="1"
+                  value="7"
+                  data-testid="seed-input"
+                  required
+                >
+              </div>
+
+              <div class="form-actions">
+                <button id="start-run" class="primary-button" type="submit" data-testid="start-run">
+                  Start local run
+                </button>
+                <button id="cancel-run" class="secondary-button" type="button" hidden>Cancel</button>
+              </div>
+            </form>
+          </aside>
+
+          <div class="run-workspace">
+            <article class="panel run-summary" aria-labelledby="run-status-title">
+              <div class="run-status-main">
+                <p id="run-status-title" class="micro-label">Current run</p>
+                <div class="status-line">
+                  <span id="run-status-dot" class="status-dot" aria-hidden="true"></span>
+                  <strong id="run-status" data-testid="run-status" aria-live="polite">Not started</strong>
+                </div>
+                <p id="run-id-label" class="run-id">Start a run to stream trace metadata.</p>
+              </div>
+              <div id="run-provenance" class="run-provenance" aria-live="polite">
+                <span class="provenance-pill provenance-pill-empty">No run provenance</span>
+              </div>
+            </article>
+
+            <article class="panel trace-panel" aria-labelledby="dag-title">
+              <div class="panel-title-row">
+                <div>
+                  <h3 id="dag-title">Agent execution graph</h3>
+                  <p id="dag-condition">Waiting for a selected condition</p>
+                </div>
+                <span class="metadata-only-badge">Metadata only</span>
+              </div>
+
+              <div class="dag-scroll" tabindex="0" aria-label="Scrollable six-agent execution graph">
+                <ol id="agent-dag" class="agent-dag">
+                  <li class="agent-node" data-agent="intake">
+                    <span class="node-index">01</span><strong>Intake &amp; Compliance</strong><small>Idle</small>
+                  </li>
+                  <li class="agent-node" data-agent="clinical_extraction">
+                    <span class="node-index">02</span><strong>Clinical Reviewer</strong><small>Idle</small>
+                  </li>
+                  <li class="agent-node" data-agent="coverage_assessment">
+                    <span class="node-index">03</span><strong>Coverage Assessment</strong><small>Idle</small>
+                  </li>
+                  <li class="agent-node" data-agent="criteria_check">
+                    <span class="node-index">04</span><strong>Criteria Check</strong><small>Idle</small>
+                  </li>
+                  <li class="agent-node" data-agent="necessity_review">
+                    <span class="node-index">05</span><strong>Necessity Review</strong><small>Idle</small>
+                  </li>
+                  <li class="agent-node" data-agent="determination">
+                    <span class="node-index">06</span><strong>Determination</strong><small>Idle</small>
+                  </li>
+                </ol>
+              </div>
+              <p class="dag-footnote">
+                Adaptive runs may loop at clinical extraction or return from
+                criteria/necessity review to coverage assessment; canonical conditions
+                follow a public fixed plan.
+              </p>
+            </article>
+
+            <article class="panel timeline-panel" aria-labelledby="timeline-title">
+              <div class="panel-title-row">
+                <div>
+                  <h3 id="timeline-title">Live trace timeline</h3>
+                  <p>Host-observable fields only</p>
+                </div>
+                <span id="event-count" class="event-count">0 events</span>
+              </div>
+              <div class="table-scroll" data-testid="timeline" aria-live="polite">
+                <table>
+                  <caption class="sr-only">Live trace events containing metadata only</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Agent step</th>
+                      <th scope="col">Hop</th>
+                      <th scope="col">Duration</th>
+                      <th scope="col">Egress</th>
+                      <th scope="col">State</th>
+                    </tr>
+                  </thead>
+                  <tbody id="timeline-body">
+                    <tr class="empty-row">
+                      <td colspan="6">No trace metadata yet.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <div class="metric-grid" aria-label="Current run metrics">
+              <article class="metric-card">
+                <span>Trace events</span><strong id="metric-events">—</strong><small>current run</small>
+              </article>
+              <article class="metric-card">
+                <span>Observed hops</span><strong id="metric-hops">—</strong><small>count</small>
+              </article>
+              <article class="metric-card">
+                <span>Total duration</span><strong id="metric-duration">—</strong><small>trace sum</small>
+              </article>
+              <article class="metric-card">
+                <span>Total egress</span><strong id="metric-egress">—</strong><small>bytes observed</small>
+              </article>
+            </div>
+
+            <article class="panel receipt-panel" aria-labelledby="receipt-title">
+              <div>
+                <p class="micro-label">Trace receipt</p>
+                <h3 id="receipt-title">Integrity verification</h3>
+                <p class="receipt-explainer">
+                  Verification checks the receipt signature and recorded integrity fields. It
+                  is not hardware attestation, a compliance certification, or proof that paper
+                  claims were reproduced.
+                </p>
+              </div>
+              <div class="receipt-state">
+                <span id="receipt-status-icon" class="receipt-icon" aria-hidden="true">—</span>
+                <div>
+                  <strong id="receipt-status" data-testid="receipt-status" aria-live="polite">
+                    Awaiting a completed run
+                  </strong>
+                  <span id="receipt-detail">No receipt loaded.</span>
+                </div>
+                <button id="verify-receipt" class="secondary-button" type="button" disabled>
+                  Verify again
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="reproduce" class="section section-dark" aria-labelledby="reproduce-title">
+        <div class="shell">
+          <div class="section-heading section-heading-split">
+            <div>
+              <p class="section-index">04 · Reproduce</p>
+              <h2 id="reproduce-title">Run the artifact from a clean checkout</h2>
+            </div>
+            <p class="section-intro">
+              The fixture path requires no external model. Azure OpenAI runs read a key only from
+              the server environment; never paste one into this console.
+            </p>
+          </div>
+
+          <div class="command-grid">
+            <article class="command-card">
+              <div class="command-heading">
+                <div><span>Docker</span><strong>Start the console</strong></div>
+                <button class="copy-button" type="button" data-copy-target="docker-command">Copy</button>
+              </div>
+              <pre id="docker-command"><code>cp .env.example .env
+docker compose up --build
+# open http://localhost:8000</code></pre>
+            </article>
+            <article class="command-card">
+              <div class="command-heading">
+                <div><span>CLI</span><strong>Run a deterministic fixture</strong></div>
+                <button class="copy-button" type="button" data-copy-target="cli-command">Copy</button>
+              </div>
+              <pre id="cli-command"><code>docker compose run --rm traceguard \
+  traceguard run --provider fixture \
+  --condition full_pad --case-id med-syn-001 --seed 7</code></pre>
+            </article>
+          </div>
+          <p class="reproduction-note">
+            Pinning, dataset hashes, generated artifacts, analysis commands, and limitations are
+            documented in the repository README. A fixture run validates reproducibility of the
+            software path only.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <p>Open research artifact · synthetic data only · no clinical use</p>
+        <p>Console exposes trace metadata, never case or model payloads.</p>
+      </div>
+    </footer>
+  </body>
+</html>

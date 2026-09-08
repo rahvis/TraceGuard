@@ -1,0 +1,36 @@
+name: traceguard-research
+
+services:
+  artifact:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: traceguard-research:local
+    restart: unless-stopped
+    environment:
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY:-}
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT:-}
+      AZURE_OPENAI_API_VERSION: ${AZURE_OPENAI_API_VERSION:-2025-01-01-preview}
+      TRACEGUARD_PROVIDER: ${TRACEGUARD_PROVIDER:-fixture}
+      MODEL_FAST: ${MODEL_FAST:-gpt-4o}
+      MODEL_DEEP: ${MODEL_DEEP:-gpt-4o}
+      MODEL_REVIEW: ${MODEL_REVIEW:-gpt-4o}
+      MODEL_VISION: ${MODEL_VISION:-gpt-4o}
+      MAX_TOKENS_PER_MATTER: ${MAX_TOKENS_PER_MATTER:-400000}
+      TRACEGUARD_CANONICAL_HOPS: ${TRACEGUARD_CANONICAL_HOPS:-7}
+      TRACEGUARD_STEP_DEADLINE_MS: ${TRACEGUARD_STEP_DEADLINE_MS:-250}
+      TRACEGUARD_STEP_EGRESS_BYTES: ${TRACEGUARD_STEP_EGRESS_BYTES:-4096}
+      TRACEGUARD_RECEIPT_ENVELOPE_BYTES: ${TRACEGUARD_RECEIPT_ENVELOPE_BYTES:-8192}
+      TRACEGUARD_ARTIFACT_DIR: /data/runs
+      TRACEGUARD_SIGNING_KEY_FILE: /data/runtime/signing-key.pem
+    ports:
+      - "${TRACEGUARD_PUBLIC_PORT:-8080}:8080"
+    volumes:
+      - ./artifacts:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; raise SystemExit(0 if urllib.request.urlopen('http://127.0.0.1:8080/api/health',timeout=2).status == 200 else 1)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+

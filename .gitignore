@@ -1,0 +1,33 @@
+# This repository is the published artifact, so the default is the opposite of
+# the development repository it was cut from: the journals, the per-run receipt
+# stores and the generated tables are the evidence behind the paper and are
+# tracked deliberately. Only secrets, caches and freshly generated output are
+# ignored.
+
+# Credentials. Never commit either of these; the .example files are the
+# templates a user fills in locally.
+.env
+.env.*
+
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Editor and OS noise
+.DS_Store
+.idea/
+.vscode/
+*.swp

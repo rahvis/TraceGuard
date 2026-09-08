@@ -1,0 +1,56 @@
+#cloud-config
+# TraceGuard confidential-VM host prep for the CI/CD (GHCR) path. Installs
+# Docker + tpm2-tools and prepares directories/network only — the GitHub
+# Actions deploy job delivers the application container over SSH (GHCR pull
+# with an ephemeral job token). Nothing is cloned or built on the VM and no
+# secret ever enters custom-data.
+package_update: true
+package_upgrade: false
+
+packages:
+  - ca-certificates
+  - curl
+  - tpm2-tools
+  - jq
+
+write_files:
+  - path: /opt/traceguard/bootstrap.sh
+    permissions: '0755'
+    owner: root:root
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+      LOG=/var/log/traceguard-bootstrap.log
+      exec > >(tee -a "$LOG") 2>&1
+      echo "[traceguard] host prep started $(date -u)"
+
+      # --- Docker engine -------------------------------------------------------
+      if ! command -v docker >/dev/null 2>&1; then
+        install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+          -o /etc/apt/keyrings/docker.asc
+        chmod a+r /etc/apt/keyrings/docker.asc
+        . /etc/os-release
+        ARCH="$(dpkg --print-architecture)"
+        KEY="/etc/apt/keyrings/docker.asc"
+        REPO="https://download.docker.com/linux/ubuntu"
+        printf 'deb [arch=%s signed-by=%s] %s %s stable\n' "$ARCH" "$KEY" "$REPO" "$VERSION_CODENAME" > /etc/apt/sources.list.d/docker.list
+        apt-get update
+        apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+      fi
+      systemctl enable --now docker
+
+      # Let the SSH deploy user (and operator) drive docker without sudo.
+      usermod -aG docker azureuser
+
+      # --- App plumbing the Actions deploy job expects -------------------------
+      docker network create traceguard-net 2>/dev/null || true
+      mkdir -p /opt/traceguard/data/runs /opt/traceguard/data/runtime /opt/caddy
+      # The container runs as unprivileged uid 10001 ('artifact'); the bind mount
+      # must be writable before first start.
+      chown -R 10001:10001 /opt/traceguard/data
+
+      echo "[traceguard] host prep finished $(date -u); awaiting first Actions deploy"
+
+runcmd:
+  - [ bash, /opt/traceguard/bootstrap.sh ]
