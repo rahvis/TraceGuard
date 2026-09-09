@@ -18,7 +18,11 @@ import json
 
 from traceguard import TraceGuardSDK
 
-sdk = TraceGuardSDK(provider="fixture")
+# Written to artifacts/local/, never to artifacts/runs. The latter holds the
+# 1,868 signed receipt stores that back the paper's fail-closed rates, and a
+# fixture run writing beside them would mix synthetic receipts into the
+# evidence. artifacts/local/ is git-ignored for exactly this reason.
+sdk = TraceGuardSDK(provider="fixture", artifact_dir="artifacts/local/runs")
 case_id = sdk.corpus.list_cases()[0].case_id
 
 result = sdk.run(case_id=case_id, condition="full", autonomy="scripted", seed=20260710)

@@ -1,0 +1,36 @@
+# The exact analysis environment the committed tables, macros and figures were
+# produced under. This file is a record, not an install target: pyproject.toml
+# holds the supported ranges and is what you install from.
+#
+# Why it exists. The analysis is deterministic given the journals and a fixed
+# environment: two identical invocations produce byte-identical output. It is
+# not deterministic across scikit-learn versions. The second task family's
+# attribute AUC moved from 0.763 to 0.733 between the version that first
+# produced it and the version recorded here, because cross-validation fold
+# construction changed underneath it. The qualitative findings were unaffected
+# (both families still clear their own nulls on the attribute channel and
+# membership still fails to replicate), but the point estimates moved, so a
+# reader who reproduces slightly different third decimals should check this
+# file before concluding that anything is wrong.
+#
+# Python 3.12.13 on darwin.
+#
+# Relationship to uv.lock. The lockfile resolves the ranges in pyproject.toml and
+# is what "uv sync --frozen" installs. It agrees with this file on scikit-learn
+# 1.9.0, which is the package the observed sensitivity was traced to, and it
+# resolves marginally newer patch releases of numpy, scipy and several packages
+# that take no part in the analysis. This file, not the lockfile, is the record of
+# what produced the committed values.
+
+numpy==2.5.1
+scipy==1.18.0
+scikit-learn==1.9.0
+matplotlib==3.11.1
+cryptography==47.0.0
+openai==2.46.0
+langgraph==1.2.9
+langchain-core==1.4.9
+pydantic==2.13.4
+fastapi==0.139.0
+uvicorn==0.51.0
+httpx==0.28.1

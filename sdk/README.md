@@ -1,14 +1,5 @@
 # The TraceShield research SDK
 
-This directory documents the programmatic surface of the artifact and holds four
-runnable examples. The implementation lives in `src/traceguard`, and the public
-entry point is the `TraceGuardSDK` class exported from the package root. Nothing
-in this directory is required to reproduce the paper; it exists so that someone
-who wants to run the crew, the defense and the receipt machinery inside their own
-program can do so without reading the experiment driver first.
-
-## What the SDK gives you
-
 Constructing `TraceGuardSDK` loads the synthetic corpus, selects a model
 provider, generates or loads an Ed25519 receipt signing key, and prepares a hash
 chained ledger. Calling `run` executes one case under one release condition and

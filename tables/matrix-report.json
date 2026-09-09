@@ -1,0 +1,779 @@
+{
+  "seed": 20260710,
+  "permutations": 2000,
+  "length_audit": {
+    "recoverability": 0.2916666666666667,
+    "chance": 0.25,
+    "null_mean": 0.250969,
+    "p_value": 0.328668,
+    "n_perm": 4000,
+    "n_samples": 24,
+    "n_groups": 6,
+    "classifier": "leave-one-(specialty,topic)-out nearest centroid over per-role lengths",
+    "indistinguishable_from_null": true
+  },
+  "ordinal": {
+    "protocol": "leave-one-(service,topic)-out",
+    "attacker": "binary-trained, ordinally scored",
+    "selected_attacker": "A2",
+    "n": 192,
+    "n_dropped_to_fold_attrition": 0,
+    "rungs": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "rung_sizes": [
+      48,
+      48,
+      48,
+      48
+    ],
+    "rung_mean_score": [
+      0.479857,
+      0.621232,
+      0.641558,
+      0.668646
+    ],
+    "somers_d": 0.19994212962962962,
+    "somers_d_signed": 0.19994212962962962,
+    "direction": "increasing",
+    "trend": {
+      "statistic": 8294.0,
+      "expected": 6912.0,
+      "variance": 183168.0,
+      "z": 3.229112987313355,
+      "n_groups": 4,
+      "group_sizes": [
+        48,
+        48,
+        48,
+        48
+      ],
+      "note": "Quote the permutation p-value, not the normal approximation: the approximation assumes no ties and large groups."
+    },
+    "binary_auc": 0.7326388888888888,
+    "binary_pooled_auc": 0.6682581018518519,
+    "n_groups_skipped": 0,
+    "null": {
+      "null_mean": 0.04032,
+      "null_q95": 0.098691,
+      "p_value": 0.0005,
+      "n_perm": 2000,
+      "scheme": "rung labels permuted within held-out group, attacker held fixed"
+    },
+    "within_sensitive": {
+      "question": "given a sensitive case, does the trace reveal which rung?",
+      "n": 144,
+      "rungs": [
+        1,
+        2,
+        3
+      ],
+      "rung_sizes": [
+        48,
+        48,
+        48
+      ],
+      "rung_mean_score": [
+        0.621232,
+        0.641558,
+        0.668646
+      ],
+      "somers_d": 0.06336805555555555,
+      "somers_d_signed": 0.06336805555555555,
+      "trend": {
+        "statistic": 3675.0,
+        "expected": 3456.0,
+        "variance": 73152.0,
+        "z": 0.8097128148422039,
+        "n_groups": 3,
+        "group_sizes": [
+          48,
+          48,
+          48
+        ],
+        "note": "Quote the permutation p-value, not the normal approximation: the approximation assumes no ties and large groups."
+      },
+      "direction": "increasing",
+      "null": {
+        "null_mean": 0.047962,
+        "null_q95": 0.119806,
+        "p_value": 0.295352,
+        "n_perm": 2000,
+        "scheme": "rung labels permuted within held-out group, attacker held fixed"
+      }
+    }
+  },
+  "rung_mechanism": {
+    "0": {
+      "depth": 7.0,
+      "egress": 7738.0
+    },
+    "1": {
+      "depth": 7.0,
+      "egress": 8741.0
+    },
+    "2": {
+      "depth": 7.0,
+      "egress": 8764.5
+    },
+    "3": {
+      "depth": 7.0,
+      "egress": 7847.5
+    }
+  },
+  "autonomy": {
+    "scripted": {
+      "attribute": {
+        "n": 192,
+        "auc": 0.8446180555555555,
+        "pooled_auc": 0.7504340277777778,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.5952465277777779,
+        "null_q95": 0.6510416666666666,
+        "p_value": 0.0004997501249375312,
+        "n_perm": 2000
+      },
+      "membership": {
+        "n": 192,
+        "auc": 0.666015625,
+        "pooled_auc": 0.6592881944444444,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.5834817708333334,
+        "null_q95": 0.6341145833333334,
+        "p_value": 0.00849575212393803,
+        "n_perm": 2000
+      }
+    },
+    "bounded": {
+      "attribute": {
+        "n": 192,
+        "auc": 0.7326388888888888,
+        "pooled_auc": 0.6682581018518519,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.5979149305555556,
+        "null_q95": 0.6536458333333334,
+        "p_value": 0.0009995002498750624,
+        "n_perm": 2000
+      },
+      "membership": {
+        "n": 192,
+        "auc": 0.7194010416666666,
+        "pooled_auc": 0.6704644097222222,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.5841735026041668,
+        "null_q95": 0.6315104166666666,
+        "p_value": 0.0004997501249375312,
+        "n_perm": 2000
+      }
+    },
+    "free": {
+      "attribute": {
+        "n": 96,
+        "auc": 0.7986111111111112,
+        "pooled_auc": 0.7962962962962963,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.6430815972222221,
+        "null_q95": 0.7222222222222222,
+        "p_value": 0.0034982508745627187,
+        "n_perm": 2000
+      },
+      "membership": {
+        "n": 96,
+        "auc": 0.765625,
+        "pooled_auc": 0.7118055555555556,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.6212799479166666,
+        "null_q95": 0.6901041666666666,
+        "p_value": 0.0014992503748125937,
+        "n_perm": 2000
+      }
+    }
+  },
+  "architecture": {
+    "pipeline crew": {
+      "attribute": {
+        "n": 192,
+        "auc": 0.7326388888888888,
+        "pooled_auc": 0.6682581018518519,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.5979149305555556,
+        "null_q95": 0.6536458333333334,
+        "p_value": 0.0009995002498750624,
+        "n_perm": 2000
+      },
+      "membership": {
+        "n": 192,
+        "auc": 0.7194010416666666,
+        "pooled_auc": 0.6704644097222222,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.5841735026041668,
+        "null_q95": 0.6315104166666666,
+        "p_value": 0.0004997501249375312,
+        "n_perm": 2000
+      }
+    },
+    "hierarchical supervisor": {
+      "attribute": {
+        "n": 96,
+        "auc": 0.7604166666666666,
+        "pooled_auc": 0.5671296296296297,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.643,
+        "null_q95": 0.7222222222222222,
+        "p_value": 0.010994502748625687,
+        "n_perm": 2000
+      },
+      "membership": {
+        "n": 96,
+        "auc": 0.6692708333333334,
+        "pooled_auc": 0.6358506944444444,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.6230403645833333,
+        "null_q95": 0.6876302083333332,
+        "p_value": 0.11794102948525736,
+        "n_perm": 2000
+      }
+    },
+    "single-agent ReAct": {
+      "attribute": {
+        "n": 96,
+        "auc": 0.6944444444444445,
+        "pooled_auc": 0.5978009259259259,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.6406076388888889,
+        "null_q95": 0.71875,
+        "p_value": 0.10644677661169415,
+        "n_perm": 2000
+      },
+      "membership": {
+        "n": 96,
+        "auc": 0.5859375,
+        "pooled_auc": 0.5368923611111112,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.6205247395833332,
+        "null_q95": 0.6901041666666666,
+        "p_value": 0.8225887056471765,
+        "n_perm": 2000
+      }
+    }
+  },
+  "model_note": {
+    "arms": "homogeneous single-deployment crews",
+    "baseline_excluded_rows": 192,
+    "why": "the baseline crew is heterogeneous, so it belongs to no single-deployment arm; the three arms are compared only with each other"
+  },
+  "model": {
+    "gpt-4o": {
+      "attribute": {
+        "n": 96,
+        "auc": 0.9826388888888888,
+        "pooled_auc": 0.9704861111111112,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.6406475694444445,
+        "null_q95": 0.7154513888888887,
+        "p_value": 0.0004997501249375312,
+        "n_perm": 2000
+      },
+      "membership": {
+        "n": 96,
+        "auc": 0.6536458333333334,
+        "pooled_auc": 0.5256076388888888,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.62021484375,
+        "null_q95": 0.6875,
+        "p_value": 0.18290854572713644,
+        "n_perm": 2000
+      }
+    },
+    "gpt-5.6-luna": {
+      "attribute": {
+        "n": 96,
+        "auc": 0.75,
+        "pooled_auc": 0.6296296296296297,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.6412222222222221,
+        "null_q95": 0.71875,
+        "p_value": 0.01649175412293853,
+        "n_perm": 2000
+      },
+      "membership": {
+        "n": 96,
+        "auc": 0.6119791666666666,
+        "pooled_auc": 0.6085069444444444,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.6221705729166668,
+        "null_q95": 0.6901041666666666,
+        "p_value": 0.5972013993003499,
+        "n_perm": 2000
+      }
+    },
+    "gpt-5.6-sol": {
+      "attribute": {
+        "n": 96,
+        "auc": 0.7638888888888888,
+        "pooled_auc": 0.7604166666666666,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.6406041666666668,
+        "null_q95": 0.71875,
+        "p_value": 0.006496751624187906,
+        "n_perm": 2000
+      },
+      "membership": {
+        "n": 96,
+        "auc": 0.625,
+        "pooled_auc": 0.5772569444444444,
+        "n_groups": 6,
+        "n_groups_skipped": 0,
+        "null_mean": 0.6218229166666668,
+        "null_q95": 0.6901041666666666,
+        "p_value": 0.4427786106946527,
+        "n_perm": 2000
+      }
+    }
+  },
+  "model_depth_at_cap_pct": {
+    "gpt-4o": 66.66666666666667,
+    "gpt-5.6-luna": 94.79166666666667,
+    "gpt-5.6-sol": 97.91666666666667
+  },
+  "frontier_arms": {
+    "gpt-4o": {
+      "templates_occupied": 3,
+      "sample_occupies_all_templates": true,
+      "boundaries": [
+        3.666666666666667,
+        5.333333333333334
+      ],
+      "rows": [
+        {
+          "epsilon": 8.0,
+          "keep_probability": 0.9993295245830855,
+          "observed_keep_rate": 1.0,
+          "auc_mean": 0.9583333333333334,
+          "auc_std": 0.0,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 4.0,
+          "keep_probability": 0.9646631559719039,
+          "observed_keep_rate": 0.9604166666666667,
+          "auc_mean": 0.9402777777777779,
+          "auc_std": 0.01799535905534714,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 2.0,
+          "keep_probability": 0.7869860421615985,
+          "observed_keep_rate": 0.78125,
+          "auc_mean": 0.8357638888888888,
+          "auc_std": 0.04076867991909571,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 1.0,
+          "keep_probability": 0.5761168847658291,
+          "observed_keep_rate": 0.5614583333333333,
+          "auc_mean": 0.6923611111111111,
+          "auc_std": 0.04478224491778569,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 0.5,
+          "keep_probability": 0.45186276187760605,
+          "observed_keep_rate": 0.440625,
+          "auc_mean": 0.6555555555555557,
+          "auc_std": 0.05567586798815592,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 0.25,
+          "keep_probability": 0.39099131515943186,
+          "observed_keep_rate": 0.37604166666666666,
+          "auc_mean": 0.6064236111111111,
+          "auc_std": 0.027983720086721415,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 0.1,
+          "keep_probability": 0.3559130712072203,
+          "observed_keep_rate": 0.35208333333333336,
+          "auc_mean": 0.6022569444444444,
+          "auc_std": 0.02875295626910324,
+          "repetitions": 10
+        }
+      ]
+    },
+    "gpt-5.6-luna": {
+      "templates_occupied": 2,
+      "sample_occupies_all_templates": false,
+      "boundaries": [
+        3.666666666666667,
+        5.333333333333334
+      ],
+      "rows": [
+        {
+          "epsilon": 8.0,
+          "keep_probability": 0.9993295245830855,
+          "observed_keep_rate": 1.0,
+          "auc_mean": 0.5277777777777778,
+          "auc_std": 0.0,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 4.0,
+          "keep_probability": 0.9646631559719039,
+          "observed_keep_rate": 0.9604166666666667,
+          "auc_mean": 0.5526041666666667,
+          "auc_std": 0.018521140584044773,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 2.0,
+          "keep_probability": 0.7869860421615985,
+          "observed_keep_rate": 0.78125,
+          "auc_mean": 0.5973958333333333,
+          "auc_std": 0.04689717839524237,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 1.0,
+          "keep_probability": 0.5761168847658291,
+          "observed_keep_rate": 0.5614583333333333,
+          "auc_mean": 0.6197916666666667,
+          "auc_std": 0.026828394127891488,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 0.5,
+          "keep_probability": 0.45186276187760605,
+          "observed_keep_rate": 0.440625,
+          "auc_mean": 0.6217013888888888,
+          "auc_std": 0.02464360647088766,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 0.25,
+          "keep_probability": 0.39099131515943186,
+          "observed_keep_rate": 0.37604166666666666,
+          "auc_mean": 0.6177083333333333,
+          "auc_std": 0.037652403785183065,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 0.1,
+          "keep_probability": 0.3559130712072203,
+          "observed_keep_rate": 0.35208333333333336,
+          "auc_mean": 0.6085069444444444,
+          "auc_std": 0.02524534797782761,
+          "repetitions": 10
+        }
+      ]
+    },
+    "gpt-5.6-sol": {
+      "templates_occupied": 1,
+      "sample_occupies_all_templates": false,
+      "boundaries": [
+        3.666666666666667,
+        5.333333333333334
+      ],
+      "rows": [
+        {
+          "epsilon": 8.0,
+          "keep_probability": 0.9993295245830855,
+          "observed_keep_rate": 1.0,
+          "auc_mean": 0.5,
+          "auc_std": 0.0,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 4.0,
+          "keep_probability": 0.9646631559719039,
+          "observed_keep_rate": 0.9604166666666667,
+          "auc_mean": 0.5380208333333333,
+          "auc_std": 0.01967941485951661,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 2.0,
+          "keep_probability": 0.7869860421615985,
+          "observed_keep_rate": 0.78125,
+          "auc_mean": 0.5845486111111111,
+          "auc_std": 0.037340920943771755,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 1.0,
+          "keep_probability": 0.5761168847658291,
+          "observed_keep_rate": 0.5614583333333333,
+          "auc_mean": 0.634201388888889,
+          "auc_std": 0.03268364617415953,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 0.5,
+          "keep_probability": 0.45186276187760605,
+          "observed_keep_rate": 0.440625,
+          "auc_mean": 0.6409722222222223,
+          "auc_std": 0.04117036598688219,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 0.25,
+          "keep_probability": 0.39099131515943186,
+          "observed_keep_rate": 0.37604166666666666,
+          "auc_mean": 0.64375,
+          "auc_std": 0.04971950644352432,
+          "repetitions": 10
+        },
+        {
+          "epsilon": 0.1,
+          "keep_probability": 0.3559130712072203,
+          "observed_keep_rate": 0.35208333333333336,
+          "auc_mean": 0.6125,
+          "auc_std": 0.02728291844522666,
+          "repetitions": 10
+        }
+      ]
+    }
+  },
+  "frontier_top_band_pct": {
+    "gpt-4o": 69.79166666666667,
+    "gpt-5.6-luna": 97.91666666666667,
+    "gpt-5.6-sol": 100.0
+  },
+  "model_contrast": {
+    "high": "gpt-4o",
+    "low": "gpt-5.6-luna",
+    "target": "attribute",
+    "groups": [
+      "cardiology::advanced-cardiac-imaging",
+      "cardiology::rhythm-device",
+      "oncology::molecular-diagnostics",
+      "oncology::systemic-therapy",
+      "psychiatry::behavioral-health-level-of-care",
+      "psychiatry::specialty-psychotropic"
+    ],
+    "per_group_difference": {
+      "cardiology::advanced-cardiac-imaging": -0.3124999999999999,
+      "cardiology::rhythm-device": -0.14583333333333337,
+      "oncology::molecular-diagnostics": -0.39583333333333326,
+      "oncology::systemic-therapy": -0.04166666666666663,
+      "psychiatry::behavioral-health-level-of-care": -0.39583333333333337,
+      "psychiatry::specialty-psychotropic": -0.10416666666666663
+    },
+    "mean_difference": -0.23263888888888884,
+    "ci95": [
+      -0.3368055555555556,
+      -0.11805555555555552
+    ],
+    "n_groups": 6,
+    "estimator": "mean paired per-held-out-group difference, cluster bootstrap of the difference"
+  },
+  "holm": {
+    "alpha": 0.05,
+    "family_size": 19,
+    "results": {
+      "autonomy:scripted:attribute": {
+        "p_value": 0.0004997501249375312,
+        "threshold": 0.002631578947368421,
+        "p_adjusted": 0.009495252373813092,
+        "rejected": true
+      },
+      "autonomy:bounded:membership": {
+        "p_value": 0.0004997501249375312,
+        "threshold": 0.002777777777777778,
+        "p_adjusted": 0.009495252373813092,
+        "rejected": true
+      },
+      "architecture:pipeline crew:membership": {
+        "p_value": 0.0004997501249375312,
+        "threshold": 0.0029411764705882353,
+        "p_adjusted": 0.009495252373813092,
+        "rejected": true
+      },
+      "model:gpt-4o:attribute": {
+        "p_value": 0.0004997501249375312,
+        "threshold": 0.003125,
+        "p_adjusted": 0.009495252373813092,
+        "rejected": true
+      },
+      "autonomy:bounded:attribute": {
+        "p_value": 0.0009995002498750624,
+        "threshold": 0.0033333333333333335,
+        "p_adjusted": 0.014992503748125937,
+        "rejected": true
+      },
+      "architecture:pipeline crew:attribute": {
+        "p_value": 0.0009995002498750624,
+        "threshold": 0.0035714285714285718,
+        "p_adjusted": 0.014992503748125937,
+        "rejected": true
+      },
+      "autonomy:free:membership": {
+        "p_value": 0.0014992503748125937,
+        "threshold": 0.0038461538461538464,
+        "p_adjusted": 0.019490254872563718,
+        "rejected": true
+      },
+      "autonomy:free:attribute": {
+        "p_value": 0.0034982508745627187,
+        "threshold": 0.004166666666666667,
+        "p_adjusted": 0.041979010494752625,
+        "rejected": true
+      },
+      "model:gpt-5.6-sol:attribute": {
+        "p_value": 0.006496751624187906,
+        "threshold": 0.004545454545454546,
+        "p_adjusted": 0.07146426786606697,
+        "rejected": false
+      },
+      "autonomy:scripted:membership": {
+        "p_value": 0.00849575212393803,
+        "threshold": 0.005,
+        "p_adjusted": 0.0849575212393803,
+        "rejected": false
+      },
+      "architecture:hierarchical supervisor:attribute": {
+        "p_value": 0.010994502748625687,
+        "threshold": 0.005555555555555556,
+        "p_adjusted": 0.09895052473763119,
+        "rejected": false
+      },
+      "model:gpt-5.6-luna:attribute": {
+        "p_value": 0.01649175412293853,
+        "threshold": 0.00625,
+        "p_adjusted": 0.13193403298350825,
+        "rejected": false
+      },
+      "architecture:single-agent ReAct:attribute": {
+        "p_value": 0.10644677661169415,
+        "threshold": 0.0071428571428571435,
+        "p_adjusted": 0.7451274362818591,
+        "rejected": false
+      },
+      "architecture:hierarchical supervisor:membership": {
+        "p_value": 0.11794102948525736,
+        "threshold": 0.008333333333333333,
+        "p_adjusted": 0.7451274362818591,
+        "rejected": false
+      },
+      "model:gpt-4o:membership": {
+        "p_value": 0.18290854572713644,
+        "threshold": 0.01,
+        "p_adjusted": 0.9145427286356822,
+        "rejected": false
+      },
+      "grade:within-sensitive trend": {
+        "p_value": 0.295352,
+        "threshold": 0.0125,
+        "p_adjusted": 1.0,
+        "rejected": false
+      },
+      "model:gpt-5.6-sol:membership": {
+        "p_value": 0.4427786106946527,
+        "threshold": 0.016666666666666666,
+        "p_adjusted": 1.0,
+        "rejected": false
+      },
+      "model:gpt-5.6-luna:membership": {
+        "p_value": 0.5972013993003499,
+        "threshold": 0.025,
+        "p_adjusted": 1.0,
+        "rejected": false
+      },
+      "architecture:single-agent ReAct:membership": {
+        "p_value": 0.8225887056471765,
+        "threshold": 0.05,
+        "p_adjusted": 1.0,
+        "rejected": false
+      }
+    }
+  },
+  "cells": {
+    "completed": 1152,
+    "journalled_rows": 1152
+  },
+  "cvm": {
+    "completed": 572,
+    "attested": 572,
+    "launch_measurements": [
+      "b2b53ada66639958b707804dade56a9336a6bbd51e625ba93002ce8614482c198245c6d012196aa845353fe259fd0a34"
+    ]
+  },
+  "cvm_vs_host": {
+    "adaptive:attribute": {
+      "host": 0.7326388888888888,
+      "cvm": 0.8364109848484849,
+      "difference": 0.10377209595959598,
+      "ci95": [
+        0.03259154040404042,
+        0.2001795296717169
+      ]
+    },
+    "adaptive:membership": {
+      "host": 0.7194010416666666,
+      "cvm": 0.7470630787037037,
+      "difference": 0.02766203703703703,
+      "ci95": [
+        -0.012369791666666666,
+        0.06378761574074072
+      ]
+    },
+    "structure:attribute": {
+      "host": 0.8446180555555555,
+      "cvm": 0.8600852272727272,
+      "difference": 0.015467171717171713,
+      "ci95": [
+        -0.07011521464646463,
+        0.09374999999999999
+      ]
+    },
+    "structure:membership": {
+      "host": 0.666015625,
+      "cvm": 0.6578067129629629,
+      "difference": -0.008208912037037034,
+      "ci95": [
+        -0.08152199074074074,
+        0.061848958333333336
+      ]
+    },
+    "full:attribute": {
+      "host": 0.5,
+      "cvm": 0.5,
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "full:membership": {
+      "host": 0.5,
+      "cvm": 0.5,
+      "difference": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

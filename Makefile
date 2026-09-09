@@ -10,9 +10,9 @@ HEADLINE ?= artifacts/cvm-honest.jsonl
 HIST ?= artifacts/experiment-usenix26-main.jsonl
 PERMS ?= 2000
 
-.PHONY: help install test lint doctor offline examples analysis figures \
-        matrix family deadline wire citations experiment judge deploy-azure \
-        docker-build docker-up docker-down clean
+.PHONY: help install test lint doctor offline examples reproduce analysis \
+        figures matrix family deadline wire utility citations experiment judge \
+        deploy-azure docker-build docker-up docker-down clean
 
 help:
 	@echo "Setup and checks"
@@ -26,12 +26,14 @@ help:
 	@echo "  make examples       run the four SDK examples"
 	@echo ""
 	@echo "Reanalysis of the shipped journals, no key and no network"
+	@echo "  make reproduce      the whole pipeline, then check it against the release"
 	@echo "  make analysis       regenerate the attack tables and macros"
 	@echo "  make matrix         regenerate the generality sweep tables"
 	@echo "  make family         regenerate the second task family tables"
 	@echo "  make deadline       regenerate the deadline provisioning tables"
 	@echo "  make wire           regenerate the packet level cross check"
 	@echo "  make figures        regenerate the figures"
+	@echo "  make utility        regenerate the judged utility table offline"
 	@echo "  make citations      resolve every arXiv identifier in refs.bib"
 	@echo ""
 	@echo "Live, requires a configured model deployment and spends money"
@@ -53,13 +55,28 @@ lint:
 doctor:
 	$(PY) traceguard doctor
 
+# TRACEGUARD_ARTIFACT_DIR is set so the fixture run cannot write into
+# artifacts/runs, which holds the signed receipt stores the paper's fail-closed
+# rates are recovered from. The default store root is artifacts/runs, so without
+# this a documented smoke test would deposit synthetic receipts in the evidence.
 offline:
-	$(PY) traceguard experiment --provider fixture --n-per-cell 2 --seed $(SEED)
+	@mkdir -p artifacts/local/runs
+	TRACEGUARD_ARTIFACT_DIR=artifacts/local/runs \
+	  $(PY) traceguard experiment --provider fixture --n-per-cell 2 --seed $(SEED)
 	@echo "Fixture output is a plumbing check labelled synthetic_fixture."
 	@echo "It is not evidence that a real agent leaks."
 
 examples:
-	@for f in sdk/examples/*.py; do echo "== $$f"; $(PY) python "$$f" || exit 1; done
+	@mkdir -p artifacts/local/runs
+	@for f in sdk/examples/*.py; do echo "== $$f"; \
+	  TRACEGUARD_ARTIFACT_DIR=artifacts/local/runs $(PY) python "$$f" || exit 1; done
+
+# The entry point the README names. Runs every stage in the order the pipeline
+# requires and finishes by checking the regenerated output against the values
+# this release committed, so a successful run is a verified reproduction rather
+# than merely a completed one.
+reproduce:
+	bash scripts/reproduce_all.sh
 
 analysis:
 	$(PY) python scripts/make_paper_artifacts.py \
@@ -102,6 +119,14 @@ figures:
 	  --deadline-journal 6000=artifacts/cvm-dl6000.jsonl \
 	  --runs artifacts/cvm-runs --out figures/fig_asymmetry.pdf
 
+# Offline reanalysis of the committed judged run. --analyze-only runs no cells
+# and needs no credentials; a cell absent from the scores file is reported as a
+# shortfall rather than filled by a stub.
+utility:
+	$(PY) python scripts/judge_utility.py --analyze-only --n-per-cell 3 \
+	  --scores artifacts/utility-cvm-enclave.jsonl --journal $(HEADLINE) \
+	  --tables-dir tables
+
 citations:
 	$(PY) python scripts/verify_citations.py --bib refs.bib
 
@@ -110,10 +135,15 @@ experiment:
 	$(PY) traceguard experiment --provider azure --n-per-cell 1 --seed $(SEED) \
 	  --journal artifacts/local/replication.jsonl
 
+# A live judged run writes its tables to tables/local, not to tables. Pointing a
+# fresh run at tables would regenerate tab_utility.tex and merge its macros over
+# macros.tex, silently replacing the paper's judged values with those of a
+# different, smaller run. Reanalysis of the committed run is 'make utility'.
 judge:
-	@mkdir -p artifacts/local
+	@mkdir -p artifacts/local tables/local
 	$(PY) python scripts/judge_utility.py --n-per-cell 3 --seed $(SEED) --workers 4 \
-	  --scores artifacts/local/utility.jsonl --journal $(HEADLINE) --tables-dir tables
+	  --scores artifacts/local/utility.jsonl --journal $(HEADLINE) \
+	  --tables-dir tables/local
 
 deploy-azure:
 	cd deploy/azure && ./deploy.sh

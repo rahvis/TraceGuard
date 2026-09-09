@@ -1,0 +1,321 @@
+name: ci
+
+# Research-artifact CI, as shipped with the published artifact. It is the same
+# workflow the development repository runs, minus one step that reported digests
+# of the manuscript PDF and sources, which this repository deliberately does not
+# contain. Beyond the usual lint/test gates it enforces the three properties an
+# artifact evaluator checks by hand otherwise:
+#   * the paper's tables and macros regenerate byte-identically from the archived
+#     run journals (so no number in the manuscript is hand-edited),
+#   * no provider API key has ever been committed, and
+#   * off Azure the attestation module reports an honest "simulated" verdict and
+#     never a fabricated hardware claim.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Weekly, so the slow calibrated-null reproduction is exercised regularly
+    # without adding minutes to every push.
+    - cron: "17 5 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: lint + tests + image build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --extra dev --frozen
+      - run: uv run ruff check src tests scripts
+      - run: uv run pytest
+      - run: uv run traceguard doctor
+      - run: docker build -t traceguard-research:test .
+
+  reproduce-paper-tables:
+    name: paper tables regenerate from archived journals
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --extra dev --frozen
+
+      # Every attack-derived table is a pure function of the archived
+      # live_replication journal plus the published seed. Regenerating into a
+      # scratch directory and diffing proves the checked-in LaTeX was not edited
+      # by hand. The headline journal is the in-CVM run, cvm-honest.jsonl, which
+      # is what the committed tables were built from; the archived
+      # gpt-4o-mini journal supplies the 'hist' comparison macros the manuscript
+      # uses for its weak-vs-strong crew claims. Each journal is paired with its
+      # own calibrated-null cache, and the generator refuses to cross them.
+      - name: Regenerate tables from the headline journal
+        run: |
+          uv run python scripts/make_paper_artifacts.py \
+            --journal artifacts/cvm-honest.jsonl \
+            --nulls tables/nulls.json \
+            --historical-journal artifacts/experiment-usenix26-main.jsonl \
+            --historical-nulls tables/nulls-historical.json \
+            --out-dir /tmp/tables-regen \
+            --seed 20260710
+
+      # The superseded journal must stay analysable after the provider it ran on
+      # was deleted from the tree. This is the concrete test of that claim, and
+      # it is why archived journals keep their historical provenance strings.
+      - name: Archived journal is still analysable
+        run: |
+          uv run python scripts/make_paper_artifacts.py \
+            --journal artifacts/experiment-usenix26-main.jsonl \
+            --nulls tables/nulls-historical.json \
+            --out-dir /tmp/tables-archived \
+            --seed 20260710
+
+      - name: Diff regenerated tables against the checked-in LaTeX
+        run: |
+          set -euo pipefail
+          status=0
+          for f in tab_main.tex tab_attribution.tex tab_specialty.tex \
+                   tab_ablation.tex tab_spectrum.tex tab_frontier.tex; do
+            if diff -u "tables/$f" "/tmp/tables-regen/$f"; then
+              echo "OK   $f reproduces from the headline journal"
+            else
+              echo "FAIL $f does not reproduce from the headline journal" >&2
+              status=1
+            fi
+          done
+          exit $status
+
+      # The judged utility table used to be ungated because regenerating it meant
+      # paying for a fresh judged run, and it silently went stale as a result.
+      # --analyze-only reanalyses the committed scores offline, runs no cells and
+      # needs no credentials, so there is no longer a reason to exempt it.
+      - name: Judged utility table regenerates from the committed judged run
+        run: |
+          set -euo pipefail
+          uv run python scripts/judge_utility.py --analyze-only --n-per-cell 3 \
+            --scores artifacts/utility-cvm-enclave.jsonl \
+            --journal artifacts/cvm-honest.jsonl \
+            --tables-dir /tmp/tables-utility
+          diff -u tables/tab_utility.tex /tmp/tables-utility/tab_utility.tex
+
+      # Figures are numbers too. Both were hand-made binaries that had drifted
+      # from the data until they became generated artifacts, so they are gated.
+      - name: Regenerate figures and compare
+        run: |
+          set -euo pipefail
+          uv run python scripts/make_paper_figures.py \
+            --journal artifacts/cvm-honest.jsonl \
+            --nulls tables/nulls.json \
+            --out-dir /tmp/figs-regen --seed 20260710
+          for f in fig_hops.pdf fig_frontier.pdf; do
+            if cmp "figures/$f" "/tmp/figs-regen/$f"; then
+              echo "OK   $f reproduces from the headline journal"
+            else
+              echo "FAIL $f does not reproduce from the headline journal" >&2
+              exit 1
+            fi
+          done
+
+      # The per-factor tables are the reviewer-facing generality result, so they
+      # get the same treatment as the main tables: regenerate from the committed
+      # matrix journals and diff. Permutations are dropped to 200 here because
+      # the gate is "was this LaTeX hand-edited", not "is the p-value tight" --
+      # the shipped numbers come from `make paper-matrix` at 2000. The nulls are
+      # therefore excluded from the diff and only the structure is compared.
+      - name: Regenerate the per-factor tables from the matrix journals
+        run: |
+          set -euo pipefail
+          if [ ! -f artifacts/matrix-baseline.jsonl ]; then
+            echo "no matrix journals committed yet; skipping" && exit 0
+          fi
+          uv run python scripts/make_matrix_artifacts.py \
+            --journal-dir artifacts --out-dir /tmp/matrix-regen \
+            --seed 20260710 --permutations 0
+          status=0
+          for f in tab_grades.tex tab_factors.tex; do
+            # A gate that skips a missing file reports success while checking
+            # nothing. The journals are committed, so the tables derived from
+            # them must be too.
+            if [ ! -f "tables/$f" ]; then
+              echo "FAIL tables/$f is missing but its journals are committed" >&2
+              status=1
+              continue
+            fi
+            # Compare the arm label and sample count only -- the two columns
+            # that are pure functions of the journal. The AUC, null and p-value
+            # columns depend on the permutation count, which CI deliberately
+            # runs low; `make paper-matrix` at 2000 produces the shipped values.
+            if diff -u \
+                 <(sed -E 's/^([^&]*&[^&]*)&.*$/\1/' "tables/$f") \
+                 <(sed -E 's/^([^&]*&[^&]*)&.*$/\1/' "/tmp/matrix-regen/$f"); then
+              echo "OK   $f reproduces from the matrix journals"
+            else
+              echo "FAIL $f does not reproduce from the matrix journals" >&2
+              status=1
+            fi
+          done
+          exit $status
+
+      # The graded corpus's length confound is a correctness gate, not a nicety:
+      # if the rung becomes recoverable from character counts, the ordinal result
+      # is measuring document length. tests/test_core.py gates it; this surfaces
+      # the measured value in the run summary so a drift is visible without
+      # reading the test output.
+      - name: Report the corpus length-confound audit
+        run: |
+          uv run python -c "
+          import json, sys
+          sys.path.insert(0, 'scripts'); sys.path.insert(0, 'src')
+          from gen_pa_corpus import length_channel_recoverability
+          a = length_channel_recoverability(
+              json.load(open('src/traceguard/data/synthetic-medical-v2.json')))
+          print(json.dumps(a, indent=2))
+          assert a['indistinguishable_from_null'], a
+          " | tee -a "$GITHUB_STEP_SUMMARY"
+
+  secret-scan:
+    name: no committed provider secret
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+
+      # scripts/scan_secrets.py is the single implementation shared by this job,
+      # scripts/verify_release.sh and tests/test_publication.py. It scans the
+      # files git tracks (deterministic across grep flavours, unlike a recursive
+      # walk), detects Azure keys as well as sk- prefixed ones, and self-tests
+      # every pattern against a canary before scanning, so the gate cannot pass
+      # silently with a broken regex.
+      - name: Scan tracked files for provider credential material
+        run: uv run python scripts/scan_secrets.py
+
+  attestation-honesty:
+    name: reports simulated off Azure, never fabricated hardware
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --extra dev --frozen
+
+      # A GitHub runner has no vTPM, so a correct build must degrade to the
+      # honest "simulated" verdict. The paper's credibility rests on this
+      # asymmetry: only a real MAA-verified SEV-SNP quote may set these flags.
+      - name: Assert honest degradation with no vTPM present
+        run: |
+          uv run python - <<'PY'
+          import json
+
+          from traceguard import attestation
+
+          probe = attestation.probe_environment()
+          result = attestation.attest()
+          payload = result.to_dict(include_token=False)
+          print("probe:", json.dumps(probe, indent=2, default=str))
+          print("result:", json.dumps(payload, indent=2, default=str)[:2000])
+
+          # A GitHub runner exposes no vTPM, so nothing may claim hardware.
+          assert attestation.detect_vtpm_device() is None, (
+              "unexpected vTPM device on a CI runner; this gate cannot conclude anything"
+          )
+          assert result.hardware_backed is False, (
+              "off-Azure build claimed hardware-backed attestation"
+          )
+          assert result.maa_verified is False, (
+              "off-Azure build claimed an MAA-verified quote"
+          )
+          assert result.verdict in {"simulated", "unavailable"}, (
+              f"expected an honest simulated/unavailable verdict, got {result.verdict!r}"
+          )
+          # A simulated run may name the TEE it emulates, but must say so in the
+          # same string so no consumer can read it as a hardware claim.
+          assert result.tee_type == "none" or "simulated" in result.tee_type, (
+              f"off-Azure build reported an unqualified TEE type of {result.tee_type!r}"
+          )
+          # The receipt binding must never assert hardware off Azure either.
+          binding = result.receipt_binding() or {}
+          assert binding.get("hardware_backed", False) is False, (
+              "receipt binding claimed hardware off Azure"
+          )
+          print(f"\nOK: honest {result.verdict!r} verdict with no vTPM present.")
+          PY
+
+  reproduce-calibrated-nulls:
+    name: calibrated permutation nulls reproduce
+    # Thousands of label permutations, each re-fitting the whole
+    # leave-one-group-out attack, so this runs on demand and weekly rather than
+    # on every push. The per-push gate still proves the tables match the cache;
+    # this proves the cache matches the journal.
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --extra dev --frozen
+
+      - name: Recompute nulls and compare against the committed cache
+        run: |
+          set -euo pipefail
+          test -f tables/nulls.json || {
+            echo "tables/nulls.json is missing; run 'make paper-nulls'." >&2
+            exit 1
+          }
+          # The cache records the journal digest it came from; a mismatch means
+          # the journal moved and the nulls were never refreshed.
+          uv run python - <<'PY'
+          import hashlib, json, pathlib, sys
+          # Two caches now: the headline journal's and the superseded journal's,
+          # the latter feeding the manuscript's weak-vs-strong comparison macros.
+          # Each is self-describing, so validate whichever journal it names.
+          failures = []
+          for name in ("tables/nulls.json", "tables/nulls-historical.json"):
+              path = pathlib.Path(name)
+              if not path.is_file():
+                  failures.append(f"{name} is missing")
+                  continue
+              cache = json.loads(path.read_text())
+              journal = pathlib.Path(cache["journal"])
+              actual = hashlib.sha256(journal.read_bytes()).hexdigest()
+              if actual != cache["journal_sha256"]:
+                  failures.append(
+                      f"stale cache {name}: {journal} is {actual[:12]}… but the "
+                      f"cache was built from {cache['journal_sha256'][:12]}…"
+                  )
+              else:
+                  print(
+                      f"{name}: matches {journal} at "
+                      f"{cache['permutations']} permutations"
+                  )
+          if failures:
+              sys.exit("\n".join(failures))
+          PY
+          cp tables/nulls.json /tmp/nulls-committed.json
+          PERMS="$(python3 -c "import json;print(json.load(open('tables/nulls.json'))['permutations'])")"
+          # cvm-honest.jsonl, not matrix-baseline.jsonl: tables/nulls.json is bound
+          # to the headline journal by sha256 and the generator refuses to pair a
+          # cache with a journal it was not computed from, so recomputing from any
+          # other journal fails this diff by construction.
+          uv run python scripts/make_paper_artifacts.py \
+            --journal artifacts/cvm-honest.jsonl \
+            --out-dir /tmp/nulls-regen --seed 20260710 \
+            --permutations "$PERMS" --nulls /tmp/nulls-regen.json
+          diff -u /tmp/nulls-committed.json /tmp/nulls-regen.json \
+            && echo "Calibrated nulls reproduce exactly."

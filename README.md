@@ -71,8 +71,21 @@ generated numbers, including the cached calibrated nulls, so that a fresh
 reproduction can be compared against the values the paper reports rather than
 merely producing numbers of its own. The directory `figures` holds the generated
 figures. The directory `schemas` holds the JSON schemas for the trace and the
-receipt. The directory `tests` holds the test suite, and the directory `docs`
-holds the longer-form design and reproducibility notes.
+receipt. The directory `.github/workflows` holds the continuous integration
+that gates this repository, and it is worth reading rather than assuming: beyond
+linting and the test suite it regenerates the paper's tables from the archived
+journals and fails if any of them differ from what is committed, recomputes the
+calibrated permutation nulls and compares them against the cached ones, scans
+every tracked file for provider credential material, and asserts that the
+attestation module reports an honest simulated verdict off Azure rather than
+fabricating a hardware claim. The directory `tests` holds the test suite, and the
+directory `docs`
+holds the longer-form design and reproducibility notes. If you are reviewing
+this artifact rather than building on it, read `docs/CLAIMS.md` first. It maps
+every quantitative claim in the paper to the journal it was computed from, the
+script that computes it and the generated file the value lands in, and it also
+records the claims the paper deliberately declines to make and the reasons why,
+including the statistical power limitation that bounds the headline result.
 
 ## A note about names
 
@@ -89,7 +102,11 @@ paper cites them.
 
 ## Requirements
 
-You need Python 3.11, 3.12 or 3.13. The dependency set is installed from
+You need Python 3.11, 3.12 or 3.13. The exact versions the committed tables and
+figures were produced under are recorded in `environment-tested.txt`, which is a
+record rather than an install target; the analysis is deterministic given the
+journals and a fixed environment, but not across scikit-learn versions, and
+`docs/REPRODUCIBILITY.md` explains where that mattered and what it did not change. The dependency set is installed from
 `pyproject.toml` and includes cryptography for the Ed25519 receipts, LangGraph
 for the crew, the OpenAI client for the model calls, and NumPy, SciPy and
 scikit-learn for the analysis. The development extra additionally installs

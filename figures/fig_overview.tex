@@ -1,0 +1,105 @@
+% Figure 1. Deliberately austere: rectangular boxes on an explicit millimetre
+% grid, no colour, no curved or crossing edges. Category is carried by rule
+% weight and fill level only, so the figure reads identically in greyscale, in a
+% photocopy, and to a colour-blind reader. Four columns, one per observable
+% coordinate, aligned through all three bands so a coordinate can be read
+% straight down: what produces it, who controls it, what the defense does to it.
+% The single shaded column is INGRESS -- the coordinate the guest does not
+% control, and the reason the guarantee is conditional rather than
+% unconditional. Positions are absolute so nothing can drift into a label.
+\begin{tikzpicture}[
+  x=1mm,y=1mm,font=\footnotesize,
+  >={Stealth[length=1.4mm,width=1.0mm]},
+  role/.style={draw=black,line width=0.4pt,fill=white,
+    minimum height=7mm,text width=34mm,inner sep=1pt,
+    align=center,font=\scriptsize},
+  corpus/.style={draw=black,line width=0.4pt,fill=black!5,
+    minimum height=7mm,minimum width=120.71mm,inner sep=2pt,
+    align=center,font=\scriptsize},
+  coord/.style={draw=black,line width=0.4pt,fill=white,
+    minimum height=8mm,text width=34mm,inner sep=1pt,
+    align=center,font=\scriptsize},
+  coordopen/.style={coord,fill=black!12,line width=1.0pt},
+  wide/.style={draw=black,line width=0.4pt,fill=black!5,
+    minimum height=7mm,inner sep=2pt,align=center,font=\scriptsize},
+  band/.style={draw=black,line width=0.7pt},
+  tag/.style={fill=white,inner sep=1.5pt,font=\scriptsize\scshape},
+  flow/.style={->,line width=0.5pt},
+  ctl/.style={font=\tiny,inner sep=1pt,align=center},
+]
+
+% NOTE on box widths: use `minimum width`, never a wide `text width`.
+% A node with align=center and a text width much wider than its content sets
+% some interword spaces to zero -- 'private corpus: referral,clinical notes'
+% and 'the guestcomposes theseso a defense can boundthem' were rendered exactly
+% like that, with the glyphs touching. Measured: the corpus line is 213.5pt
+% (75mm) natural against a 119.3mm text width, so it is not overflow; a narrow
+% text width (the 34mm column boxes) is unaffected, and dropping it or using
+% minimum width fixes it. minimum width keeps the box geometry identical while
+% letting the text set at its natural width.
+
+%--- column centres, one per coordinate; everything aligns to these ---------
+\def\cA{19}\def\cB{62}\def\cC{105}\def\cD{148}
+
+%======================= BAND 1: inside the boundary ========================
+\node[corpus] at (62,80)
+  {private corpus: referral, clinical notes, prior therapies, payer coverage
+   policy\\($6$ documents, held fixed across every framing and membership arm)};
+
+\node[role] (a1) at (\cA,69) {Intake \&\\Compliance};
+\node[role] (a2) at (\cB,69) {Clinical\\Reviewer};
+\node[role] (a3) at (\cC,69) {Coverage\\Assessment};
+\node[role] (a4) at (\cA,58) {Criteria\\Check};
+\node[role] (a5) at (\cB,58) {Necessity\\Review};
+\node[role] (a6) at (\cC,58) {Synthesis \&\\Determination};
+
+\draw[flow] (30,80) -- (\cB,80) -- (a2.north);
+\draw[flow] (a1) -- (a2);
+\draw[flow] (a2) -- (a3);
+% wrap from the end of row 1 to the start of row 2, then left to right again,
+% so the whole plan reads in one direction with no backward arrow.
+\draw[flow] (a3.south) -- (\cC,64) -- (\cA,64) -- (a4.north);
+\draw[flow] (a4) -- (a5);
+\draw[flow] (a5) -- (a6);
+
+\draw[band] (-1,48) rectangle (168,86);
+\node[tag,anchor=west] at (3,86) {Confidential VM (AMD SEV-SNP)};
+\node[ctl,anchor=north] at (83.5,53)
+  {how many extraction passes, whether to repair a criterion, whether to revise
+   after review\\
+   are decided at runtime by the LLM over the private data};
+
+%======================= BAND 2: the four coordinates =======================
+\node[coord]     (c1) at (\cA,38) {\textbf{structure}\\step sequence, length};
+\node[coord]     (c2) at (\cB,38) {\textbf{timing}\\per-step wall clock};
+\node[coord]     (c3) at (\cC,38) {\textbf{egress}\\request bytes out};
+\node[coordopen] (c4) at (\cD,38) {\textbf{ingress}\\response bytes in};
+
+\foreach \x in {\cA,\cB,\cC,\cD}{\draw[flow] (\x,48) -- (\x,42.2);}
+
+\node[ctl,anchor=north] at (62,32.5)
+  {the guest composes these, so a defense can bound them};
+\node[ctl,anchor=north,text width=36mm] at (\cD,32.5)
+  {the provider chooses this;\\bounded only via the request};
+
+\node[wide,minimum width=120.71mm] (host) at (62,23)
+  {honest-but-curious host $\cdot$ reads all four coordinates, never a payload};
+\node[wide,minimum width=34.703mm,fill=white] (api) at (\cD,23)
+  {commercial model API\\\emph{outside} the boundary};
+\draw[flow] (\cD,27.8) -- (\cD,26.8);
+
+%======================= BAND 3: the release ================================
+\node[coord]     (v1) at (\cA,9) {\textbf{closed}\\canonical plan};
+\node[coord]     (v2) at (\cB,9) {\textbf{closed}\\public deadline};
+\node[coord]     (v3) at (\cC,9) {\textbf{closed}\\public egress ceiling};
+\node[coordopen] (v4) at (\cD,9) {\textbf{OPEN}\\not paddable};
+
+\foreach \x in {\cA,\cB,\cC}{\draw[flow] (\x,19.2) -- (\x,13.2);}
+\draw[flow] (\cD,19.2) -- (\cD,13.2);
+
+\draw[band] (-1,3) rectangle (168,15);
+% Offset from the corner on purpose: at x=3 this tag's white fill covered the
+% column-A arrow crossing the band edge at x=19 and clipped it. Sits in the
+% gap between columns A and B instead.
+\node[tag,anchor=west] at (26,15) {\sys{} release};
+\end{tikzpicture}

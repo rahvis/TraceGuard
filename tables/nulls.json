@@ -1,0 +1,75 @@
+{
+  "_comment": "Calibrated per-arm permutation nulls. Regenerate with `make paper-nulls`. Committed because recomputing takes minutes; the digest below makes a stale cache detectable.",
+  "journal": "artifacts/cvm-honest.jsonl",
+  "journal_sha256": "2922c03f33abd5444d74e05ea758c60efbc8bf48c3ad3b7776847e2f78e7996d",
+  "nulls": {
+    "adaptive_attribute": {
+      "mode": "within_group",
+      "n_perm": 2000,
+      "null_mean": 0.598624751984127,
+      "null_q95": 0.6557663690476191,
+      "null_q99": 0.6883854166666667,
+      "null_std": 0.031794316196566794,
+      "observed_auc": 0.7844742063492064,
+      "p_value": 0.0004997501249375312,
+      "target": "attribute"
+    },
+    "adaptive_membership": {
+      "mode": "within_group",
+      "n_perm": 2000,
+      "null_mean": 0.5841389973958334,
+      "null_q95": 0.6318641493055556,
+      "null_q99": 0.6589526909722222,
+      "null_std": 0.026745063622699586,
+      "observed_auc": 0.7210503472222222,
+      "p_value": 0.0004997501249375312,
+      "target": "membership"
+    },
+    "full_attribute": {
+      "mode": "within_group",
+      "n_perm": 2000,
+      "null_mean": 0.5964422743055555,
+      "null_q95": 0.650173611111111,
+      "null_q99": 0.6736111111111112,
+      "null_std": 0.03044195707049428,
+      "observed_auc": 0.7638888888888888,
+      "p_value": 0.0004997501249375312,
+      "target": "attribute"
+    },
+    "full_membership": {
+      "mode": "within_group",
+      "n_perm": 2000,
+      "null_mean": 0.5836578776041668,
+      "null_q95": 0.6328125,
+      "null_q99": 0.654296875,
+      "null_std": 0.02698838240477726,
+      "observed_auc": 0.5774739583333334,
+      "p_value": 0.567216391804098,
+      "target": "membership"
+    },
+    "structure_attribute": {
+      "mode": "within_group",
+      "n_perm": 2000,
+      "null_mean": 0.5970299479166666,
+      "null_q95": 0.6536458333333334,
+      "null_q99": 0.6822916666666666,
+      "null_std": 0.03133879453894352,
+      "observed_auc": 0.7994791666666666,
+      "p_value": 0.0004997501249375312,
+      "target": "attribute"
+    },
+    "structure_membership": {
+      "mode": "within_group",
+      "n_perm": 2000,
+      "null_mean": 0.5825846354166666,
+      "null_q95": 0.6315104166666666,
+      "null_q99": 0.6575651041666667,
+      "null_std": 0.02726270308409453,
+      "observed_auc": 0.61328125,
+      "p_value": 0.13193403298350825,
+      "target": "membership"
+    }
+  },
+  "permutations": 2000,
+  "seed": 20260710
+}

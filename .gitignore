@@ -3,12 +3,20 @@
 # stores and the generated tables are the evidence behind the paper and are
 # tracked deliberately. Only secrets, caches and freshly generated output are
 # ignored.
+#
+# Nothing that a reader needs in order to reproduce a number belongs in this
+# file. In particular scripts/, tests/, docs/, figures/, tables/ and refs.bib
+# are the artifact: if they are ignored, the published repository contains
+# evidence with no code to re-derive it from.
 
-# Credentials. Never commit either of these; the .example files are the
-# templates a user fills in locally.
+# Credentials. Never commit these. The .example files are the templates a user
+# fills in locally, so they are negated back in after the wildcard above them,
+# and the negation must stay a "!" rather than becoming a comment.
 .env
 .env.*
-
+!.env.example
+deploy/azure/deploy.env
+!deploy/azure/deploy.env.example
 *.pem
 *.key
 
@@ -25,6 +33,19 @@ venv/
 .mypy_cache/
 .coverage
 htmlcov/
+
+# Output written by a fresh reproduction run. The committed journals under
+# artifacts/ are the paper's evidence; a local re-run writes here instead of
+# overwriting them, and must not be committed on top of them.
+artifacts/local/
+artifacts/runtime/
+artifacts/preview*
+artifacts/run-*/
+*.pcap
+
+# A live judged run writes here so it cannot overwrite the committed judged
+# tables; see the judge target in the Makefile.
+tables/local/
 
 # Editor and OS noise
 .DS_Store
