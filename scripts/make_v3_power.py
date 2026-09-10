@@ -241,6 +241,11 @@ def main() -> int:
         "powAdaptAttrIngress": _c(car, "adaptive:attribute", "ingress_only"),
         "powFullAttrIngress": _c(car, "full:attribute", "ingress_only"),
         "powAdaptMemb": _c(car, "adaptive:membership", "full"),
+        # Membership on the provider-chosen coordinate alone, both arms. These
+        # are what show that reshaping degrades the coordinate no mechanism
+        # bounds -- the effect that makes the benefit exceed the closeable share.
+        "powBaseIngressMembAdaptive": _c(car, "adaptive:membership", "ingress_only"),
+        "powBaseIngressMembFull": _c(car, "full:membership", "ingress_only"),
         "powFullMemb": _c(car, "full:membership", "full"),
         "powBaseAdaptAttr": _c(carb, "adaptive:attribute", "full"),
         "powBaseFullAttr": _c(carb, "full:attribute", "full"),
