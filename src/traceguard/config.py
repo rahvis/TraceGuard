@@ -89,6 +89,20 @@ class Settings:
     # would refuse 0.7% of steps outright.  8192 clears the observed maximum
     # with roughly 2x headroom for live variation in prompt escaping.
     egress_ceiling_bytes: int = 8192
+    # Opt-in ingress-shaping probe. When set, every request additionally asks
+    # the provider for a response of exactly this many characters. It is a
+    # request and not a mechanism: the guest cannot enforce it, which is the
+    # point Prop. 2 makes and what this knob exists to measure. Default None,
+    # so no shipped arm is affected.
+    ingress_response_chars: int | None = None
+    # Control for the depth sweep. The shipped extraction prompt announces the
+    # pass budget ("pass k of at most N"), so sweeping N changes what the model
+    # is told as well as how deep it may go, and the announced budget alone can
+    # move the provider's replies -- which are the ingress coordinate. Setting
+    # this False omits the announcement, making the prompt invariant across arms
+    # so realized depth is the only thing the sweep varies. Default True, so the
+    # shipped configuration and every existing arm are unaffected.
+    announce_pass_budget: bool = True
     receipt_envelope_bytes: int = 8192
     provider_timeout_s: float = 120.0
     max_tokens_fast: int = 320
@@ -234,6 +248,15 @@ class Settings:
                 4096,
                 "TRACEGUARD_EGRESS_CEILING_BYTES",
             ),
+            ingress_response_chars=(
+                int(_first(source, "TRACEGUARD_INGRESS_RESPONSE_CHARS"))
+                if _first(source, "TRACEGUARD_INGRESS_RESPONSE_CHARS")
+                else None
+            ),
+            announce_pass_budget=(
+                str(_first(source, "TRACEGUARD_ANNOUNCE_PASS_BUDGET") or "1").strip().lower()
+                not in {"0", "false", "no"}
+            ),
             receipt_envelope_bytes=_int(
                 _first(source, "TRACEGUARD_RECEIPT_ENVELOPE_BYTES"),
                 8192,
@@ -289,6 +312,8 @@ class Settings:
             "canonical_research_hops": self.canonical_research_hops,
             "step_deadline_s": self.step_deadline_s,
             "egress_ceiling_bytes": self.egress_ceiling_bytes,
+            "ingress_response_chars": self.ingress_response_chars,
+            "announce_pass_budget": self.announce_pass_budget,
             "receipt_envelope_bytes": self.receipt_envelope_bytes,
             "provider_timeout_s": self.provider_timeout_s,
             "policy_id": self.policy_id,

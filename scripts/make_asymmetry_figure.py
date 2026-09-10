@@ -106,24 +106,40 @@ def main() -> int:
     # ---- panel (a): which coordinate carries which secret -------------------
     x = range(len(names))
     w = 0.38
-    ax1.bar([i - w / 2 for i in x], a_auc, w, label="attribute",
-            facecolor="#4a4a4a", edgecolor=_INK, linewidth=0.6, zorder=3)
-    ax1.bar([i + w / 2 for i in x], m_auc, w, label="membership",
-            facecolor="white", edgecolor=_INK, linewidth=0.6, hatch="////", zorder=3)
+    bar_attr = ax1.bar([i - w / 2 for i in x], a_auc, w, label="attribute",
+                       facecolor="#4a4a4a", edgecolor=_INK, linewidth=0.6, zorder=3)
+    bar_memb = ax1.bar([i + w / 2 for i in x], m_auc, w, label="membership",
+                       facecolor="white", edgecolor=_INK, linewidth=0.6,
+                       hatch="////", zorder=3)
     ax1.axhline(0.5, color=_INK, linewidth=0.6, linestyle="-", zorder=2)
-    ax1.axhline(0.60, color=_INK, linewidth=0.9, linestyle="--", zorder=4)
-    ax1.text(-0.42, 0.603, "calibrated null", ha="left", va="bottom",
-             fontsize=6.5, color=_INK)
-    # The two right-hand coordinates are the ones the mechanism cannot close.
-    ax1.axvspan(2.5, 3.5, color="#000000", alpha=0.055, zorder=1)
-    ax1.text(3.0, 0.838, "provider-chosen:\nnot paddable", ha="center",
-             va="top", fontsize=6.5, color=_INK)
+    # The calibrated null is a legend entry rather than a label anchored to its
+    # own line. At 0.60 that line passes within 0.008 of the structure
+    # coordinate's membership bar, so there is no room beside it for text: any
+    # label placed there sits on the bar.
+    null_line = ax1.axhline(0.60, color=_INK, linewidth=0.9, linestyle="--",
+                            zorder=4, label="calibrated null")
+    # The right-hand coordinate is the one no in-guest mechanism can close.
+    # Band width matched to the label it carries, kept centred on the bar
+    # group, so the text sits inside the shading instead of straddling its
+    # edge. It still starts clear of the request column and its tick label.
+    ax1.axvspan(2.42, 3.58, color="#000000", alpha=0.055, zorder=1)
+    ax1.text(3.0, 0.947, "provider-chosen:\nnot paddable", ha="center",
+             va="top", fontsize=6, color=_INK, linespacing=1.15)
     ax1.set_xticks(list(x))
     ax1.set_xticklabels(names, fontsize=6)
-    ax1.set_ylim(0.48, 0.90)
+    # Headroom above the tallest bar (0.784) so the legend and the shaded-column
+    # label both have somewhere to go that is not on top of data. The x-limits
+    # end exactly on the band edge, so the shading reads as marking that column
+    # rather than as a gap before the frame.
+    ax1.set_xlim(-0.6, 3.58)
+    ax1.set_ylim(0.48, 0.96)
     ax1.set_ylabel("single-coordinate ROC-AUC", color=_INK)
     ax1.set_title("(a) which coordinate carries which secret", fontsize=7.5, color=_INK)
-    ax1.legend(frameon=False, fontsize=6.5, loc="upper left", ncol=2, bbox_to_anchor=(0.0, 1.04))
+    ax1.legend([bar_attr, bar_memb, null_line],
+               ["attribute", "membership", "calibrated null"],
+               frameon=False, fontsize=6.5, loc="upper left", ncol=1,
+               handlelength=1.4, handletextpad=0.5,
+               borderaxespad=0.2, labelspacing=0.28)
     ax1.grid(axis="y", color="#d8d8d8", linewidth=0.5, zorder=0)
     for sp in ("top", "right"):
         ax1.spines[sp].set_visible(False)
@@ -211,18 +227,27 @@ def main() -> int:
             linewidth=1.0, markersize=5, capsize=2.5, zorder=3,
         )
         for xx, yy, pp in zip(xs, ys, pts, strict=True):
-            last = xx == max(xs)
-            dx = -22 if last else 6
-            # Above the marker normally; below it where the curve or the panel
-            # title would otherwise run through the label.
-            dy = -13 if (yy > 88 or last) else 9
-            ax2.annotate(f"n={pp[2]}", (xx, yy), textcoords="offset points",
-                         xytext=(dx, dy), fontsize=6.5, color=_INK)
+            # Clear the label of three things at once: the curve, the error bar
+            # it describes, and the frame. For every point but the last, above
+            # its own upper Wilson cap is free. At the last point the curve
+            # passes through everything above the marker and the axis floor is
+            # just below it, so the only free space is the wedge to its left,
+            # under the falling curve -- which is why that one is anchored to
+            # the marker and not to a cap.
+            hi = 100.0 * wilson(pp[1], pp[2])[1]
+            if xx == max(xs):
+                anchor, off, ha, va = yy, (-8.0, -2.0), "right", "top"
+            elif xx == min(xs):
+                anchor, off, ha, va = hi, (4.0, 4.0), "left", "bottom"
+            else:
+                anchor, off, ha, va = hi, (7.0, 4.0), "left", "bottom"
+            ax2.annotate(f"n={pp[2]}", (xx, anchor), textcoords="offset points",
+                         xytext=off, fontsize=6.5, color=_INK, ha=ha, va=va)
         ax2.set_xticks(xs)
     ax2.set_xlabel("public per-step deadline $\\tau^\\star$ (s)", color=_INK)
     ax2.set_ylabel("runs losing a step (%)", color=_INK)
     ax2.set_title("(b) what the $(0,0)$-on-$C$ release costs", fontsize=7.5, color=_INK)
-    ax2.set_ylim(-6, 112)
+    ax2.set_ylim(-8, 118)
     ax2.grid(axis="y", color="#d8d8d8", linewidth=0.5, zorder=0)
     for sp in ("top", "right"):
         ax2.spines[sp].set_visible(False)
@@ -230,7 +255,7 @@ def main() -> int:
     ax2b = ax2.twinx()
     if pts:
         ax2b.plot(xs, [12 * v for v in xs], ":", color=_INK, linewidth=0.9, zorder=2)
-        ax2b.set_ylim(-6 * 1.2, 112 * 1.2)
+        ax2b.set_ylim(-8 * 1.2, 118 * 1.2)
     ax2b.set_ylabel("latency (s), $12\\times\\tau^\\star$", color=_INK, fontsize=7)
     ax2b.spines["top"].set_visible(False)
 

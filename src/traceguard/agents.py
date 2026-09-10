@@ -155,6 +155,21 @@ class TraceWriterCrew:
     ) -> ProviderResponse:
         if self.recorder.token_budget_used >= self.settings.max_tokens_per_matter:
             raise TokenBudgetExceeded("per-matter token guardrail reached")
+        # Ingress-shaping probe. Unlike the egress padding, which rides in an inert
+        # transport field and provably cannot change the completion, an ingress
+        # request has to be an instruction inside the prompt: the size of the
+        # response is the provider's to choose, so the only lever the guest has is
+        # to ask. That asymmetry is exactly Prop. 2, and measuring how well the ask
+        # works is what this knob is for. Off by default.
+        fixed = self.settings.ingress_response_chars
+        if fixed:
+            system_prompt = (
+                f"{system_prompt}\n\nOUTPUT LENGTH REQUIREMENT: your entire reply must "
+                f"be exactly {fixed} characters long. If your content is shorter, pad it "
+                f"with trailing spaces until it is exactly {fixed} characters. If longer, "
+                f"truncate it to exactly {fixed} characters. This requirement overrides "
+                f"brevity but never correctness of the required fields."
+            )
         request = ProviderRequest(
             role=role,
             model=model,
@@ -303,8 +318,12 @@ class TraceWriterCrew:
             user_prompt=(
                 f"{self.profile.request_label}:\n{case.query}\n\n"
                 f"{self.profile.sources_label}:\n{packet}\n\n"
-                f"This is {self.profile.extraction_pass_label} {hop} of at most "
-                f"{self.settings.max_research_hops}."
+                + (
+                    f"This is {self.profile.extraction_pass_label} {hop} of at most "
+                    f"{self.settings.max_research_hops}."
+                    if self.settings.announce_pass_budget
+                    else f"This is {self.profile.extraction_pass_label} {hop}."
+                )
             ),
             state=state,
             fixture_context={

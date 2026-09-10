@@ -130,7 +130,13 @@ def figure_frontier(result: dict[str, Any], out: Path) -> None:
     ax.set_xticklabels([f"{e:g}" for e in eps])
     ax.set_xlabel(r"per-request budget $\epsilon$ (smaller = more private)", color=_INK)
     ax.set_ylabel("attack ROC-AUC", color=_INK)
-    ax.legend(frameon=False, fontsize=7, loc="center left")
+    # Lower right: the curves rise left to right and all of them sit above
+    # 0.57 across the right half, so this is the one corner of the panel
+    # with no data in it. "center left" put the legend under the steepest
+    # part of both curves.
+    ax.legend(frameon=False, fontsize=7, loc="lower right",
+              handlelength=1.4, handletextpad=0.5, labelspacing=0.35,
+              borderaxespad=0.3)
     ax.set_xlim(-0.4, len(eps) - 0.6)
     _style(ax)
     fig.tight_layout(pad=0.5)
