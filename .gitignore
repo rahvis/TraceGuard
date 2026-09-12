@@ -1,13 +1,29 @@
-# This repository is the published artifact, so the default is the opposite of
-# the development repository it was cut from: the journals, the per-run receipt
-# stores and the generated tables are the evidence behind the paper and are
-# tracked deliberately. Only secrets, caches and freshly generated output are
-# ignored.
+# This repository publishes the system, the evidence and the verifier. It does
+# not publish the manuscript-facing analysis pipeline: the scripts that recompute
+# the paper's numbers from the journals, the generated tables and figures they
+# write, the bibliography they check, the test suite, the JSON schemas and the
+# longer-form notes are all held back here deliberately and are ignored below
+# rather than merely absent, so that a stray `git add .` cannot reintroduce them.
 #
-# Nothing that a reader needs in order to reproduce a number belongs in this
-# file. In particular scripts/, tests/, docs/, figures/, tables/ and refs.bib
-# are the artifact: if they are ignored, the published repository contains
-# evidence with no code to re-derive it from.
+# The consequence is worth stating plainly rather than discovering later: what
+# remains is reproducible in the sense that the journals under artifacts/ are the
+# recorded evidence and every run in them can be verified from a clean checkout,
+# but the published tree cannot by itself re-derive a table in the paper. The
+# README says the same thing where a reader will meet it.
+
+# Held back from the published artifact. On disk, out of the index.
+docs/
+figures/
+schemas/
+scripts/
+tables/
+tests/
+refs.bib
+SECURITY.md
+THIRD_PARTY.md
+CITATION.cff
+CONTRIBUTING.md
+environment-tested.txt
 
 # Credentials. Never commit these. The .example files are the templates a user
 # fills in locally, so they are negated back in after the wildcard above them,
@@ -42,10 +58,6 @@ artifacts/runtime/
 artifacts/preview*
 artifacts/run-*/
 *.pcap
-
-# A live judged run writes here so it cannot overwrite the committed judged
-# tables; see the judge target in the Makefile.
-tables/local/
 
 # Editor and OS noise
 .DS_Store
